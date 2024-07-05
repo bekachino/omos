@@ -1,0 +1,38 @@
+.left-menu {
+  position: sticky;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 230px;
+  background-color: #36495E;
+  padding: 10px 10px 10px 0;
+}
+
+.left-menu-tabs {
+  margin-top: 20px;
+}
+
+.left-menu-tab-item,
+.left-menu-tab-item-selected {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 20px;
+  color: #FFFFFF;
+  padding: 9px 9px 9px 15px;
+  border-bottom-right-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.left-menu-tab-item:hover {
+  background-color: rgba(118, 157, 202, 0.30);
+}
+
+.left-menu-tab-item-selected {
+  background-color: #FFFFFF;
+  color: #36495E;
+}
+
+.left-menu-tab-item-selected path {
+  fill: #36495E;
+}
