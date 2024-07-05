@@ -4,16 +4,24 @@ import {
 } from "./dataThunk";
 
 const initialState = {
-  troubles: [], troubleCreatedMessage: '', troubleCreatedErrorMessage: '',
+  troubles: [],
+  tradesLoading: false,
+  troubleCreatedMessage: '',
+  troubleCreatedErrorMessage: '',
 };
 
 const DataSlice = createSlice({
   name: "data", initialState, reducers: {}, extraReducers: (builder) => {
     builder.addCase(getTroubles.pending, (state) => {
+      state.tradesLoading = true;
     });
     builder.addCase(getTroubles.fulfilled, (state, { payload: res }) => {
+      state.troubles = res || [];
+      state.tradesLoading = false;
     });
     builder.addCase(getTroubles.rejected, (state, { payload: error }) => {
+      state.tradesLoading = false;
+      state.tradesCreatedErrorMessage = error;
     });
   },
 });
