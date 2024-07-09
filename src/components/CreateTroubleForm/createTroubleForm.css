@@ -1,0 +1,49 @@
+.create-trouble-form-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition-property: overlay display opacity;
+  transition-duration: 0.2s;
+  transition-behavior: allow-discrete;
+  backdrop-filter: blur(3px);
+}
+
+.create-trouble-form-container[open] {
+  display: flex;
+  opacity: 1;
+  
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.create-trouble-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #238854;
+  border-radius: 5px;
+  padding: 20px 35px;
+  width: 400px;
+  background-color: #FFFFFF;
+}
+
+.create-trouble-form h3 {
+  margin: 0;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.create-trouble-form-btns {
+  display: flex;
+  justify-items: stretch;
+  gap: 10px;
+  margin-top: 10px;
+}

@@ -3,13 +3,13 @@
 }
 
 .troubles-table-container {
-  background-color: #FFFFFF;
   margin: 0 auto;
   max-width: fit-content;
 }
 
 .troubles table {
   border-collapse: collapse;
+  background-color: #FFFFFF;
 }
 
 .troubles th {
@@ -23,6 +23,10 @@
   text-align: center;
   border: 1px solid #BFBFBFBF;
   padding: 13px 10px;
+}
+
+.troubles-pagination-container {
+  background-color: #FFFFFF;
 }
 
 .troubles-pagination {
@@ -70,4 +74,9 @@
   color: #212529;
   font-weight: 600;
   border-bottom: 2px solid #238854;
+}
+
+.troubles-tools {
+  display: flex;
+  margin-bottom: 20px;
 }

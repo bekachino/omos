@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import './troubles.css';
+import {
+  ReactComponent as PostNewTrouble
+} from "../../assets/post-new-trouble.svg";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getTroubles } from "../../features/dataThunk";
 import { formatDate, formatDuration } from "../../constants";
+import CreateTroubleForm
+  from "../../components/CreateTroubleForm/CreateTroubleForm";
+import Button from "../../components/Button/Button";
+import './troubles.css';
 
 const Troubles = () => {
   const dispatch = useAppDispatch();
@@ -10,6 +16,7 @@ const Troubles = () => {
     troubles, page_size, troublesTabs
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
+  const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
   
   useEffect(() => {
     dispatch(getTroubles({ currentTab, page_size }));
@@ -27,10 +34,21 @@ const Troubles = () => {
     }
   };
   
+  const toggleCreateTroubleModal = () => setCreateTroubleModalOpen(!createTroubleModalOpen);
+  
   return (
     <div className='troubles'>
       <h1>Новости по авариям</h1>
       <div className='troubles-table-container'>
+        <div className='troubles-tools'>
+          <Button variant='success'
+            onClick={toggleCreateTroubleModal}
+            style={{ padding: '18px 75px 14px', marginLeft: 'auto' }}
+          >
+            <PostNewTrouble/>
+            Добавить новость
+          </Button>
+        </div>
         <table className='torubles-list'>
           <thead>
           <tr>
@@ -63,48 +81,53 @@ const Troubles = () => {
           ))}
           </tbody>
         </table>
-        <div className='troubles-pagination'>
-          <div className='troubles-to-prev-list' onClick={tabToPrev}>Пред</div>
-          <div className='troubles-tab-numbers'>
-            {troublesTabs.map((tab) => (
-              <>
-                {troublesTabs.length > 15 && (
-                  currentTab >= 1 && tab > currentTab - 5 && tab < currentTab + 5
-                ) && <div
-                  className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
-                  key={tab}
-                  onClick={() => setCurrentTab(tab)}
-                >{tab}</div>}
-                {troublesTabs.length > 15 && currentTab > 5 && tab === 1 && <>
-                  <div
+        <div className='troubles-pagination-container'>
+          <div className='troubles-pagination'>
+            <div className='troubles-to-prev-list'
+              onClick={tabToPrev}>Пред
+            </div>
+            <div className='troubles-tab-numbers'>
+              {troublesTabs.map((tab) => (
+                <React.Fragment key={tab}>
+                  {troublesTabs.length > 15 && (
+                    currentTab >= 1 && tab > currentTab - 5 && tab < currentTab + 5
+                  ) && <div
                     className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
                     key={tab}
                     onClick={() => setCurrentTab(tab)}
-                  >{tab}</div>
-                  <span> ... </span>
-                </>}
-                {troublesTabs.length > 15 && currentTab < troublesTabs.length - 4 && tab === troublesTabs[troublesTabs.length - 1] && <>
-                  <span> ... </span>
-                  <div
+                  >{tab}</div>}
+                  {troublesTabs.length > 15 && currentTab > 5 && tab === 1 && <>
+                    <div
+                      className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
+                      key={tab}
+                      onClick={() => setCurrentTab(tab)}
+                    >{tab}</div>
+                    <span> ... </span>
+                  </>}
+                  {troublesTabs.length > 15 && currentTab < troublesTabs.length - 4 && tab === troublesTabs[troublesTabs.length - 1] && <>
+                    <span> ... </span>
+                    <div
+                      className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
+                      key={tab}
+                      onClick={() => setCurrentTab(tab)}
+                    >{tab}</div>
+                  </>}
+                  {troublesTabs.length <= 15 && <div
                     className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
                     key={tab}
                     onClick={() => setCurrentTab(tab)}
-                  >{tab}</div>
-                </>}
-                {
-                  troublesTabs.length <= 15 &&
-                  <div
-                    className={`troubles-tab-number ${currentTab === tab ? 'troubles-current-tab' : ''}`}
-                    key={tab}
-                    onClick={() => setCurrentTab(tab)}
-                  >{tab}</div>
-                }
-              </>
-            ))}
+                  >{tab}</div>}
+                </React.Fragment>
+              ))}
+            </div>
+            <div className='troubles-to-next-list'
+              onClick={tabToNext}>След
+            </div>
           </div>
-          <div className='troubles-to-next-list' onClick={tabToNext}>След</div>
         </div>
       </div>
+      <CreateTroubleForm open={createTroubleModalOpen}
+        toggleModal={toggleCreateTroubleModal}/>
     </div>
   );
 };

@@ -1,0 +1,32 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #8F8F8F;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: 0.1s;
+  touch-action: cross-slide-x;
+  text-align: center;
+}
+
+.button:active {
+  transform: scale(0.92);
+}
+
+.button[variant=success] {
+  border-color: #238854;
+  color: #238854;
+}
+
+.button[variant=warning] {
+  border-color: #ffa807;
+  color: #ffa807;
+}
+
+.button[variant=error] {
+  border-color: #E31A1A;
+  color: #E31A1A;
+}
