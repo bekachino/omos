@@ -1,0 +1,8 @@
+.file-upload {
+  display: flex;
+  justify-content: space-between;
+}
+
+.img-preview {
+  max-width: 200px;
+}

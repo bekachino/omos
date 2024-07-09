@@ -41,6 +41,22 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     }
   };
   
+  const handleFileChange = (e) => {
+    setState((prevState) => (
+      {
+        ...prevState, photo_path: e.target.files[0],
+      }
+    ));
+  };
+  
+  const removeImage = () => {
+    setState((prevState) => (
+      {
+        ...prevState, photo_path: null,
+      }
+    ));
+  };
+  
   const onPickedLocationClick = (locationId) => {
     const filteredAddresses = addresses.filter(address => address !== locationId);
     setAddresses(filteredAddresses);
@@ -140,7 +156,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
-        <FileUpload/>
+        <FileUpload handleFileChange={handleFileChange}
+          file={state?.photo_path}
+          removeImage={removeImage}
+          label='загрузите фото'
+        />
         <div className='create-trouble-form-btns'>
           <Button
             variant='error'
