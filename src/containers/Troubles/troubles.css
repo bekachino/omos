@@ -24,3 +24,50 @@
   border: 1px solid #BFBFBFBF;
   padding: 13px 10px;
 }
+
+.troubles-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 110px;
+  padding: 20px 20px 0;
+  max-width: fit-content;
+  margin: 0 auto;
+  color: #8F8F8F;
+  font-size: 14px;
+  user-select: none;
+}
+
+.troubles-to-prev-list,
+.troubles-to-next-list {
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.troubles-to-prev-list {
+  padding-left: 35px;
+  background-image: url("../../assets/tab-left.svg");
+  background-position: left 5px;
+}
+
+.troubles-to-next-list {
+  padding-right: 35px;
+  background-image: url("../../assets/tab-right.svg");
+  background-position: right 5px;
+}
+
+.troubles-tab-numbers {
+  display: flex;
+}
+
+.troubles-tab-number {
+  min-width: 30px;
+  padding-bottom: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.troubles-current-tab {
+  color: #212529;
+  font-weight: 600;
+  border-bottom: 2px solid #238854;
+}
