@@ -1,3 +1,19 @@
 *, ::before {
   box-sizing: border-box;
 }
+
+html {
+  width: 1920px;
+}
+
+body {
+  background: #ECF0F1;
+}
+
+.App {
+  display: flex;
+}
+
+h1 {
+  text-align: center;
+}

@@ -1,0 +1,26 @@
+.troubles {
+  flex-grow: 1;
+}
+
+.troubles-table-container {
+  background-color: #FFFFFF;
+  margin: 0 auto;
+  max-width: fit-content;
+}
+
+.troubles table {
+  border-collapse: collapse;
+}
+
+.troubles th {
+  background-color: #212529;
+  color: white;
+}
+
+.troubles th,
+.troubles td {
+  max-width: 240px;
+  text-align: center;
+  border: 1px solid #BFBFBFBF;
+  padding: 13px 10px;
+}
