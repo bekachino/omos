@@ -2,6 +2,12 @@ export const apiUrl = 'http://planup.skynet.kg:8000/planup/';
 
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 
+export const locationTypes = [
+  { key: 'region', value: 'регион' }, {
+    key: 'city', value: 'город'
+  }, { key: 'dist', value: 'район' }
+];
+
 export const formatDate = (date) => {
   const newDate = new Date(date);
   const pad = (num, size) => num.toString().padStart(size, '0');

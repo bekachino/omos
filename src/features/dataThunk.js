@@ -16,3 +16,45 @@ export const getTroubles = createAsyncThunk("data/getTroubles", async (data, {
     throw e;
   }
 });
+
+export const getIncidentTypes = createAsyncThunk("data/getIncidentTypes", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`/choices/incident-types/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
+export const getWorkTypes = createAsyncThunk("data/getWorkTypes", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`/choices/work-types/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
+export const getLocations = createAsyncThunk("data/getLocations", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`http://91.210.169.237:8001/news/api/all_location_list/?type=${location_type}`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});

@@ -1,0 +1,78 @@
+.select-container {
+  position: relative;
+}
+
+.select-input {
+  border: 1px solid #BFBFBF;
+  border-radius: 5px;
+  padding: 10px 45px 10px 8px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.select-input::placeholder {
+  color: #8F8F8F;
+}
+
+.select-toggler {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #BFBFBF;
+  border-radius: 5px;
+}
+
+.select-arrow {
+  transition: 0.2s;
+  transform: translateY(-1px);
+}
+
+.select-input:focus + .select-toggler .select-arrow {
+  transform: rotate(180deg) translateY(-3px);
+}
+
+.select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  position: absolute;
+  top: 99%;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  background-color: #FFFFFF;
+  border: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 0 5px;
+  max-height: 0;
+  overflow-y: scroll;
+}
+
+.select-input:focus {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.select-input:focus ~ .select-options {
+  padding: 5px;
+  max-height: 250px;
+  border: 1px solid #BFBFBF;
+}
+
+.select-option {
+  border-radius: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.select-option:hover {
+  background-color: #f1f1f1;
+}

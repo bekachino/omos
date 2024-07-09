@@ -1,7 +1,7 @@
 import React from 'react';
 import './textarea.css';
 
-const TextArea = ({ label, name, value, onChange }) => {
+const TextArea = ({ label, name, value, onChange, required }) => {
   return (
     <div className='textarea-container'>
       <textarea
@@ -9,6 +9,7 @@ const TextArea = ({ label, name, value, onChange }) => {
         name={name}
         value={value}
         onChange={onChange}
+        required={required}
       />
       <label className='textarea-label'>{label}</label>
     </div>
