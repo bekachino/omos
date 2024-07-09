@@ -1,0 +1,32 @@
+.textarea-container {
+  position: relative;
+}
+
+.textarea {
+  border: 1px solid #BFBFBF;
+  border-radius: 5px;
+  padding: 10px 8px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  min-height: 100px;
+  max-height: 300px;
+  resize: vertical;
+}
+
+.textarea-label {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  color: #8F8F8F;
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+.textarea:focus + .textarea-label,
+.textarea-has-value + .textarea-label {
+  top: -7px;
+  font-size: 11px;
+  background-color: #FFFFFF;
+  padding: 0 3px;
+}

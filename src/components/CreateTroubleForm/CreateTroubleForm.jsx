@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './createTroubleForm.css';
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import TextArea from "../TextArea/TextArea";
 
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const [state, setState] = useState(null);
@@ -41,7 +42,13 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
-        <div className="create-trouble-form-btns">
+        <TextArea label='Описание'
+          name='description'
+          value={state?.description}
+          onChange={handleChange}
+          required
+        />
+        <div className='create-trouble-form-btns'>
           <Button
             variant='error'
             style={{ padding: '8px 10px', flexGrow: 1 }}
@@ -49,7 +56,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           >
             Отмена
           </Button>
-          <Button variant='success' style={{ padding: '8px 10px',  flexGrow: 5 }}>
+          <Button variant='success'
+            style={{ padding: '8px 10px', flexGrow: 5 }}>
             Добавить
           </Button>
         </div>
