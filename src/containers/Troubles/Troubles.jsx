@@ -4,23 +4,31 @@ import {
 } from "../../assets/post-new-trouble.svg";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getTroubles } from "../../features/dataThunk";
-import { formatDate, formatDuration } from "../../constants";
+import { formatDate } from "../../constants";
 import CreateTroubleForm
   from "../../components/CreateTroubleForm/CreateTroubleForm";
 import Button from "../../components/Button/Button";
 import './troubles.css';
+import { resetTroubleCreated } from "../../features/dataSlice";
+import Alert from "../../components/Alert/Alert";
 
 const Troubles = () => {
   const dispatch = useAppDispatch();
   const {
-    troubles, page_size, troublesTabs
+    troubles, page_size, troublesTabs, troubleCreated, troubleNotCreated,
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
   
   useEffect(() => {
     dispatch(getTroubles({ currentTab, page_size }));
-  }, [currentTab, dispatch, page_size]);
+  }, [currentTab, dispatch, page_size, troubleCreated]);
+  
+  useEffect(() => {
+    if (troubleCreated || troubleNotCreated) {
+      setTimeout(() => dispatch(resetTroubleCreated()), 5000);
+    }
+  }, [dispatch, troubleCreated, troubleNotCreated]);
   
   const tabToPrev = () => {
     if (currentTab > 1) {
@@ -34,13 +42,20 @@ const Troubles = () => {
     }
   };
   
-  const toggleCreateTroubleModal = () => setCreateTroubleModalOpen(!createTroubleModalOpen);
+  const toggleCreateTroubleModal = () => {
+    setCreateTroubleModalOpen(!createTroubleModalOpen);
+  }
   
   return (
     <div className='troubles'>
       <h1>Новости по авариям</h1>
       <div className='troubles-table-container'>
         <div className='troubles-tools'>
+          <Alert
+            show={troubleCreated || troubleNotCreated}
+            value={troubleCreated ? 'Новость успешно создана' : troubleNotCreated ? 'Что то пошло не так' : ''}
+            variant={troubleCreated ? 'success' : troubleNotCreated ? 'error' : 'default'}
+          />
           <Button variant='success'
             onClick={toggleCreateTroubleModal}
             style={{ padding: '18px 75px 14px', marginLeft: 'auto' }}
@@ -71,7 +86,7 @@ const Troubles = () => {
               <td>{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
               <td>{trouble?.resolved_at ? formatDate(trouble?.resolved_at) : '-'}</td>
-              <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
+              <td>{trouble?.duration || '-'}</td>
               <td>{trouble?.subscriber_count}</td>
               <td>{trouble?.location}</td>
               <td>{trouble?.side_accident}</td>

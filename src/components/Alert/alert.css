@@ -1,0 +1,38 @@
+.alert {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  border: 1px solid;
+  width: 300px;
+  min-height: 30px;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.alert-shown {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.alert[variant='success'] {
+  border-color: #238854;
+  background-color: #D2F2D0;
+  color: #238854;
+}
+
+.alert[variant='error'] {
+  border-color: #E31A1A;
+  background-color: #F6DEDE;
+  color: #E31A1A;
+}
+
+.alert[variant='default'] {
+  border-color: #bcbcbc;
+  background-color: #efefef;
+  color: #000000;
+}

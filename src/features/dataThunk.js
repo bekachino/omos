@@ -58,3 +58,25 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
     throw e;
   }
 });
+
+export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const formData = new FormData();
+    
+    for (const key in data) {
+      if (key === 'addresses') {
+        formData.append(key, JSON.stringify(data[key]));
+      } else formData.append(key, data[key]);
+    }
+    
+    const req = await axiosApi.post(`send_news_to/`, formData);
+    return req.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});

@@ -7,7 +7,7 @@ const Input = ({ label, type, name, value, onChange, required }) => {
       <input type={type || 'text'}
         className={`input ${value?.length ? 'input-has-value' : ''}`}
         name={name}
-        value={value}
+        value={value?.length ? value : ''}
         onChange={onChange}
         required={required}
       />

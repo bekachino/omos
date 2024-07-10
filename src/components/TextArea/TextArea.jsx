@@ -7,7 +7,7 @@ const TextArea = ({ label, name, value, onChange, required }) => {
       <textarea
         className={`textarea ${value?.length ? 'textarea-has-value' : ''}`}
         name={name}
-        value={value}
+        value={value?.length ? value : ''}
         onChange={onChange}
         required={required}
       />

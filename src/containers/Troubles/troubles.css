@@ -78,6 +78,7 @@
 }
 
 .troubles-tools {
+  position: relative;
   display: flex;
   margin-bottom: 20px;
 }

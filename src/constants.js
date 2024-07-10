@@ -1,4 +1,4 @@
-export const apiUrl = 'http://planup.skynet.kg:8000/planup/';
+export const apiUrl = 'http://10.1.2.110:8000/planup/';
 
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 
@@ -20,18 +20,3 @@ export const formatDate = (date) => {
   
   return `${day}.${month}.${year}  ${hours}:${minutes}`;
 };
-
-export const formatDuration = (durationStr) => {
-  const [hours, minutes, secondsMs] = durationStr.split(':');
-  const [seconds] = secondsMs.split('.');
-  
-  const hoursInt = parseInt(hours, 10);
-  const minutesInt = parseInt(minutes, 10);
-  const secondsInt = parseInt(seconds, 10);
-  
-  const formattedHours = hoursInt.toString().padStart(2, '0');
-  const formattedMinutes = minutesInt.toString().padStart(2, '0');
-  const formattedSeconds = secondsInt.toString().padStart(2, '0');
-  
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-}

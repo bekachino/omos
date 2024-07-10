@@ -3,13 +3,7 @@ import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 import './select.css';
 
 const Select = ({
-  label,
-  type,
-  name,
-  onChange,
-  required,
-  loading,
-  children
+  label, type, name, value, onChange, required, loading, children
 }) => {
   const inputRef = useRef(null);
   const [currentValue, setCurrentValue] = useState('');
@@ -24,38 +18,37 @@ const Select = ({
       <input type={type || 'text'}
         className='select-input'
         name={name}
-        value={name === 'locations' ? '' : currentValue || ''}
+        value={name === 'locations' ? '' : value ? currentValue : ''}
         placeholder={label}
         ref={inputRef}
         required={required}
+        autoComplete='off'
       />
       <div className='select-toggler'>
         <div className='select-arrow'><SelectArrow/></div>
       </div>
       <div className='select-options'>
-        {loading ?
+        {loading ? <div
+          className='select-option'
+        >
+          Загрузка...
+        </div> : children.map((item) => (
           <div
-            className='select-option'
+            className={item.props?.className}
+            value={item.props?.value}
+            onMouseDown={() => {
+              setCurrentValue(item.props?.children);
+              onChange({
+                target: {
+                  name: name || '', value: item.props?.value
+                }
+              });
+              inputRef.current.blur();
+            }}
           >
-            Загрузка...
-          </div> :
-          children.map((item) => (
-            <div
-              className={item.props?.className}
-              value={item.props?.value}
-              onMouseDown={() => {
-                setCurrentValue(item.props?.children);
-                onChange({
-                  target: {
-                    name: name || '', value: item.props?.value
-                  }
-                });
-                inputRef.current.blur();
-              }}
-            >
-              {item.props?.children}
-            </div>
-          ))}
+            {item.props?.children}
+          </div>
+        ))}
       </div>
     </div>
   );

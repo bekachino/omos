@@ -6,7 +6,10 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getIncidentTypes, getLocations, getWorkTypes
+  getIncidentTypes,
+  getLocations,
+  getWorkTypes,
+  postTrouble
 } from "../../features/dataThunk";
 import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
@@ -14,7 +17,10 @@ import FileUpload from "../FileUpload/FileUpload";
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
   const {
-    incident_types, work_types, locations, locationsLoading,
+    incident_types,
+    work_types,
+    locations,
+    locationsLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
@@ -25,11 +31,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   }, [dispatch]);
   
   useEffect(() => {
-    if (state?.location_type) {
+    if (state?.post_type) {
       setAddresses([]);
-      dispatch(getLocations(state?.location_type));
+      dispatch(getLocations(state?.post_type));
     }
-  }, [dispatch, state?.location_type]);
+  }, [dispatch, state?.post_type]);
   
   const handleChange = e => setState({
     ...state, [e.target.name]: e.target.value
@@ -44,7 +50,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const handleFileChange = (e) => {
     setState((prevState) => (
       {
-        ...prevState, photo_path: e.target.files[0],
+        ...prevState, image: e.target.files[0],
       }
     ));
   };
@@ -52,14 +58,25 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const removeImage = () => {
     setState((prevState) => (
       {
-        ...prevState, photo_path: null,
+        ...prevState, image: null,
       }
     ));
   };
-  
+
   const onPickedLocationClick = (locationId) => {
     const filteredAddresses = addresses.filter(address => address !== locationId);
     setAddresses(filteredAddresses);
+  };
+  
+  const onSubmit = async e => {
+    e.preventDefault();
+    await dispatch(postTrouble({
+      ...state,
+      addresses,
+    }));
+    //toggleModal();
+    //setState(null);
+    //setAddresses([]);
   };
   
   return (
@@ -67,8 +84,16 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       onClick={toggleModal}
       open={open}
     >
-      <form className='create-trouble-form' onClick={e => e.stopPropagation()}>
+      <form className='create-trouble-form'
+        onClick={e => e.stopPropagation()}
+        onSubmit={onSubmit}>
         <h3>Добавление новости</h3>
+        <Input label='Название'
+          name='title'
+          value={state?.title}
+          onChange={handleChange}
+          required
+        />
         <Input label='Локация'
           name='location'
           value={state?.location}
@@ -90,6 +115,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <Input label='Порт'
           name='port'
           value={state?.port}
+          onChange={handleChange}
+          required
+        />
+        <Input label='Длительность'
+          name='duration'
+          value={state?.duration}
           onChange={handleChange}
           required
         />
@@ -118,8 +149,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           ))}
         </Select>}
         <Select label='Тип локации'
-          name='location_type'
-          value={state?.location_type}
+          name='post_type'
+          value={state?.post_type}
           options={incident_types}
           onChange={handleChange}
           required
@@ -129,7 +160,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               value={location?.key}>{location?.value}</div>
           ))}
         </Select>
-        {state?.location_type && <Select label='Локации'
+        {state?.post_type && <Select label='Локации'
           name='locations'
           options={locations}
           onChange={handleAddressesChange}
@@ -157,7 +188,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         />
         <FileUpload handleFileChange={handleFileChange}
-          file={state?.photo_path}
+          file={state?.image}
           removeImage={removeImage}
           label='загрузите фото'
         />
@@ -165,7 +196,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           <Button
             variant='error'
             style={{ padding: '8px 10px', flexGrow: 1 }}
-            onClick={toggleModal}
+            onClick={() => {
+              toggleModal();
+              setState(null);
+              setAddresses([]);
+            }}
           >
             Отмена
           </Button>
