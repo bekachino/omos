@@ -11,6 +11,10 @@ import Button from "../../components/Button/Button";
 import './troubles.css';
 import { resetTroubleCreated } from "../../features/dataSlice";
 import Alert from "../../components/Alert/Alert";
+import SingleTroubleModal
+  from "../../components/SingleTroubleModal/SingleTroubleModal";
+import singleTroubleModal
+  from "../../components/SingleTroubleModal/SingleTroubleModal";
 
 const Troubles = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +22,7 @@ const Troubles = () => {
     troubles, page_size, troublesTabs, troubleCreated, troubleNotCreated,
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
+  const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
   
   useEffect(() => {
@@ -44,6 +49,10 @@ const Troubles = () => {
   
   const toggleCreateTroubleModal = () => {
     setCreateTroubleModalOpen(!createTroubleModalOpen);
+  }
+  
+  const toggleSingleTroubleModal = () => {
+    setSingleTroubleModalOpen(!singleTroubleModal);
   }
   
   return (
@@ -81,7 +90,7 @@ const Troubles = () => {
           </thead>
           <tbody>
           {troubles.map(trouble => (
-            <tr key={trouble?.id}>
+            <tr key={trouble?.id} onClick={setSingleTroubleModalOpen}>
               <td>{trouble?.id}</td>
               <td>{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
@@ -141,8 +150,14 @@ const Troubles = () => {
           </div>
         </div>
       </div>
-      <CreateTroubleForm open={createTroubleModalOpen}
-        toggleModal={toggleCreateTroubleModal}/>
+      <CreateTroubleForm
+        open={createTroubleModalOpen}
+        toggleModal={toggleCreateTroubleModal}
+      />
+      <SingleTroubleModal
+        open={singleTroubleModalOpen}
+        toggleModal={toggleSingleTroubleModal}
+      />
     </div>
   );
 };
