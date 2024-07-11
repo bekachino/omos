@@ -30,8 +30,9 @@
   gap: 10px;
   border: 1px solid #238854;
   border-radius: 5px;
-  padding: 20px 35px 0;
+  padding: 20px 35px;
   width: 400px;
+  min-height: 500px;
   background-color: #FFFFFF;
   max-height: 80%;
   overflow-y: scroll;
@@ -41,4 +42,30 @@
   margin: 0;
   text-align: center;
   margin-bottom: 10px;
+}
+
+.trouble-modal-loading {
+  display: flex;
+  width: 100%;
+  height: 300px;
+}
+
+.trouble-modal-loading::before {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border: 4px solid #172b3c;
+  border-radius: 50%;
+  border-bottom: 4px solid transparent;
+  margin: auto;
+  animation: 0.8s spin linear infinite;
+}
+
+.single-trouble-modal-container td {
+  padding-bottom: 10px;
+}
+
+@keyframes spin {
+  from {transform: rotate(0)}
+  to {transform: rotate(360deg)}
 }

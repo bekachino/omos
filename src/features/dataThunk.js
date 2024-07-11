@@ -7,8 +7,22 @@ export const getTroubles = createAsyncThunk("data/getTroubles", async (data, {
   rejectWithValue
 }) => {
   try {
-    const response = await axiosApi(`incident_list/?page=${data.currentTab}&page_size=${data.page_size}`);
+    const response = await axiosApi(`incident_list/?page=${data.currentTab || 1}&page_size=${data.page_size}`);
     return { ...response.data, page_size: data.page_size };
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
+export const getTrouble = createAsyncThunk("data/getTrouble", async (id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`incidents/${id}`);
+    return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
       return rejectWithValue(smthIsWrongErrorMessage);
@@ -59,6 +73,20 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
   }
 });
 
+export const getSideAccidentStatuses = createAsyncThunk("data/getSideAccidentStatuses", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`choices/sides/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {
@@ -67,9 +95,11 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
     const formDataToBitrix = new FormData();
     
     for (const key in data) {
-      if (['addresses', 'title', 'post_type', 'image'].includes(key)) {
+      if (['addresses', 'title', 'post_type', 'image', 'text'].includes(key)) {
         if (key === 'addresses') {
           formDataToHydra.append(key, JSON.stringify(data[key]));
+        } else if (key === 'image') {
+          formDataToHydra.append(key, data[key]);
         } else formDataToHydra.append(key, data[key]);
       } else formDataToBitrix.append(key, data[key]);
     }
@@ -77,9 +107,28 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
     const reqToBitrix = await axiosApi.post(`incident/create/`, formDataToBitrix);
     //const reqToHydra = await axiosApi.post(`send_news_to/`, formDataToHydra);
   } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 400) {
-      return rejectWithValue(smthIsWrongErrorMessage);
-    }
-    throw e;
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const editSolution = createAsyncThunk("data/editSolution", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi.patch(`incidents/${data?.id}/update-solution/`, { solution: data?.solution });
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const editSideAccident = createAsyncThunk("data/editSideAccident", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi.patch(`side_incident/update/${data?.id}/`, { side_accident: data?.side_accident });
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
   }
 });

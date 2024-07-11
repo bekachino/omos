@@ -16,8 +16,19 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const {
     incident_types, work_types, locations, locationsLoading,
   } = useAppSelector(state => state.dataState);
-  const [state, setState] = useState(null);
-  const [addresses, setAddresses] = useState([]);
+  const [state, setState] = useState({
+    location: 'test location',
+    subscriber_count: '100',
+    olt: 'test olt',
+    port: 'test port',
+    work_duration: '10 часов',
+    incident_type: 'maintenance',
+    work_type: 'expansion',
+    description: 'test description',
+    title: 'test title',
+    post_type: 'dist',
+  });
+  const [addresses, setAddresses] = useState([1, 2]);
   
   useEffect(() => {
     dispatch(getIncidentTypes());
@@ -65,7 +76,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      ...state, addresses,
+      addresses, ...state,
     }));
     toggleModal();
     setState(null);
@@ -111,12 +122,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
-        <Input label='Длительность'
-          name='work_duration'
-          value={state?.work_duration}
-          onChange={handleChange}
-          required
-        />
         <Select label='Причина'
           name='incident_type'
           value={state?.incident_type}
@@ -129,6 +134,15 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               value={type?.key}>{type?.value}</div>
           ))}
         </Select>
+        {
+          state?.incident_type === 'maintenance' &&
+          <Input label='Длительность'
+            name='work_duration'
+            value={state?.work_duration}
+            onChange={handleChange}
+            required
+          />
+        }
         {state?.incident_type === 'maintenance' && <Select label='Тип работы'
           name='work_type'
           value={state?.work_type}
@@ -177,6 +191,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <TextArea label='Описание'
           name='description'
           value={state?.description}
+          onChange={handleChange}
+          required
+        />
+        <TextArea label='Скрипт'
+          name='text'
+          value={state?.text}
           onChange={handleChange}
           required
         />

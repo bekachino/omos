@@ -9,31 +9,36 @@ import CreateTroubleForm
   from "../../components/CreateTroubleForm/CreateTroubleForm";
 import Button from "../../components/Button/Button";
 import './troubles.css';
-import { resetTroubleCreated } from "../../features/dataSlice";
+import { resetAlertMessage } from "../../features/dataSlice";
 import Alert from "../../components/Alert/Alert";
 import SingleTroubleModal
-  from "../../components/SingleTroubleModal/SingleTroubleModal";
-import singleTroubleModal
   from "../../components/SingleTroubleModal/SingleTroubleModal";
 
 const Troubles = () => {
   const dispatch = useAppDispatch();
   const {
-    troubles, page_size, troublesTabs, troubleCreated, troubleNotCreated,
+    troubles, page_size, troublesTabs, successMessage, errorMessage,
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
   const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
+  const [currentTrouble, setCurrentTrouble] = useState(null);
+  
+  useEffect(() => {
+    document.body.addEventListener('mousedown', () => {
+      dispatch(resetAlertMessage());
+    });
+  }, [dispatch]);
   
   useEffect(() => {
     dispatch(getTroubles({ currentTab, page_size }));
-  }, [currentTab, dispatch, page_size, troubleCreated]);
+  }, [currentTab, dispatch, page_size]);
   
   useEffect(() => {
-    if (troubleCreated || troubleNotCreated) {
-      setTimeout(() => dispatch(resetTroubleCreated()), 5000);
+    if (successMessage || errorMessage) {
+      if (!errorMessage) dispatch(getTroubles({ currentTab, page_size }));
     }
-  }, [dispatch, troubleCreated, troubleNotCreated]);
+  }, [currentTab, dispatch, errorMessage, page_size, successMessage]);
   
   const tabToPrev = () => {
     if (currentTab > 1) {
@@ -51,8 +56,9 @@ const Troubles = () => {
     setCreateTroubleModalOpen(!createTroubleModalOpen);
   }
   
-  const toggleSingleTroubleModal = () => {
-    setSingleTroubleModalOpen(!singleTroubleModal);
+  const toggleSingleTroubleModal = (id) => {
+    setSingleTroubleModalOpen(!singleTroubleModalOpen);
+    if (id) setCurrentTrouble(id);
   }
   
   return (
@@ -61,9 +67,9 @@ const Troubles = () => {
       <div className='troubles-table-container'>
         <div className='troubles-tools'>
           <Alert
-            show={troubleCreated || troubleNotCreated}
-            value={troubleCreated ? 'Новость успешно создана' : troubleNotCreated ? 'Что то пошло не так' : ''}
-            variant={troubleCreated ? 'success' : troubleNotCreated ? 'error' : 'default'}
+            show={!!successMessage || !!errorMessage}
+            value={successMessage || errorMessage}
+            variant={successMessage ? 'success' : errorMessage ? 'error' : 'default'}
           />
           <Button variant='success'
             onClick={toggleCreateTroubleModal}
@@ -73,14 +79,13 @@ const Troubles = () => {
             Добавить новость
           </Button>
         </div>
-        <table className='torubles-list'>
+        <table className='troubles-list'>
           <thead>
           <tr>
             <th>№</th>
             <th>Статус</th>
             <th>Время падения</th>
             <th>Время восставновл.</th>
-            <th>Вр. отсуств. сервиса</th>
             <th>Кол-во абонентов</th>
             <th>Квадрат</th>
             <th>Сторона аварии (Элкат/Скайнет)</th>
@@ -90,12 +95,13 @@ const Troubles = () => {
           </thead>
           <tbody>
           {troubles.map(trouble => (
-            <tr key={trouble?.id} onClick={setSingleTroubleModalOpen}>
+            <tr key={trouble?.id}
+              onClick={() => toggleSingleTroubleModal(trouble?.id)}
+            >
               <td>{trouble?.id}</td>
               <td>{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
               <td>{trouble?.resolved_at ? formatDate(trouble?.resolved_at) : '-'}</td>
-              <td>{trouble?.work_duration || '-'}</td>
               <td>{trouble?.subscriber_count}</td>
               <td>{trouble?.location}</td>
               <td>{trouble?.side_accident}</td>
@@ -157,6 +163,7 @@ const Troubles = () => {
       <SingleTroubleModal
         open={singleTroubleModalOpen}
         toggleModal={toggleSingleTroubleModal}
+        troubleId={currentTrouble}
       />
     </div>
   );

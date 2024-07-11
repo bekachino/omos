@@ -1,0 +1,37 @@
+.editable-paragraph {
+  position: relative;
+}
+
+.editable-paragraph-input {
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 5px 25px 5px 4px;
+  width: 100%;
+  outline: none;
+  font-size: 14px;
+}
+
+.editable-paragraph-input:focus {
+  border: 1px solid #BFBFBF;
+}
+
+.editable-paragraph button {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 0;
+  background-color: transparent;
+  background-image: url("../../assets/save-icon.svg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.editable-paragraph button:disabled {
+  background-image: url("../../assets/edit-icon.svg");
+  background-size: 15px;
+}

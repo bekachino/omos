@@ -13,20 +13,20 @@
   background-color: #FFFFFF;
 }
 
-.troubles th {
+.troubles-list th {
   background-color: #212529;
   color: white;
 }
 
-.troubles th,
-.troubles td {
+.troubles-list th,
+.troubles-list td {
   max-width: 240px;
   text-align: center;
   border: 1px solid #BFBFBFBF;
   padding: 13px 10px;
 }
 
-.troubles td {
+.troubles-list td {
   cursor: pointer;
 }
 
