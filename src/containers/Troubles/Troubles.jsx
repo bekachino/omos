@@ -86,7 +86,7 @@ const Troubles = () => {
               <td>{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
               <td>{trouble?.resolved_at ? formatDate(trouble?.resolved_at) : '-'}</td>
-              <td>{trouble?.duration || '-'}</td>
+              <td>{trouble?.work_duration || '-'}</td>
               <td>{trouble?.subscriber_count}</td>
               <td>{trouble?.location}</td>
               <td>{trouble?.side_accident}</td>

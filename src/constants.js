@@ -1,4 +1,4 @@
-export const apiUrl = 'http://10.1.2.110:8000/planup/';
+export const apiUrl = 'http://planup.skynet.kg:8000/planup/';
 
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 

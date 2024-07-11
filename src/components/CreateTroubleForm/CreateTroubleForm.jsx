@@ -6,10 +6,7 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getIncidentTypes,
-  getLocations,
-  getWorkTypes,
-  postTrouble
+  getIncidentTypes, getLocations, getWorkTypes, postTrouble
 } from "../../features/dataThunk";
 import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
@@ -17,10 +14,7 @@ import FileUpload from "../FileUpload/FileUpload";
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
   const {
-    incident_types,
-    work_types,
-    locations,
-    locationsLoading,
+    incident_types, work_types, locations, locationsLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
@@ -62,7 +56,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       }
     ));
   };
-
+  
   const onPickedLocationClick = (locationId) => {
     const filteredAddresses = addresses.filter(address => address !== locationId);
     setAddresses(filteredAddresses);
@@ -71,12 +65,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      ...state,
-      addresses,
+      ...state, addresses,
     }));
-    //toggleModal();
-    //setState(null);
-    //setAddresses([]);
+    toggleModal();
+    setState(null);
+    setAddresses([]);
   };
   
   return (
@@ -119,8 +112,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         />
         <Input label='Длительность'
-          name='duration'
-          value={state?.duration}
+          name='work_duration'
+          value={state?.work_duration}
           onChange={handleChange}
           required
         />
