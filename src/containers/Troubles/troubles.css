@@ -86,3 +86,21 @@
   display: flex;
   margin-bottom: 20px;
 }
+
+.trouble-status-1,
+.trouble-status-2,
+.trouble-status-3 {
+  font-weight: 700;
+}
+
+.trouble-status-1 {
+  color: #FCA21C;
+}
+
+.trouble-status-2 {
+  color: #E31A1A;
+}
+
+.trouble-status-3 {
+  color: #1DBF12;
+}

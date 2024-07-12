@@ -16,6 +16,7 @@ import {
 import EditableSelect from "../EditableSelect/EditableSelect";
 import TextArea from "../TextArea/TextArea";
 import Button from "../Button/Button";
+import { formatDate, formatDuration } from "../../constants";
 
 const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
   const dispatch = useAppDispatch();
@@ -95,6 +96,30 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
           <h3>Детальный просмотр</h3>
           <table>
             <tbody>
+            <tr>
+              <td>Номер</td>
+              <td>{trouble?.id}</td>
+            </tr>
+            <tr>
+              <td>Время падения</td>
+              <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
+            </tr>
+            <tr>
+              <td>Время восстановления</td>
+              <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
+            </tr>
+            <tr>
+              <td>Вр. отсутств. сервиса</td>
+              <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
+            </tr>
+            <tr>
+              <td>Кол-во абонентов</td>
+              <td>{trouble?.subscriber_count}</td>
+            </tr>
+            <tr>
+              <td>Квадрат</td>
+              <td>{trouble?.location}</td>
+            </tr>
             <tr>
               <td>Решение</td>
               <td>

@@ -100,7 +100,9 @@ const Troubles = () => {
               onClick={() => toggleSingleTroubleModal(trouble?.id)}
             >
               <td>{trouble?.id}</td>
-              <td>{trouble?.work_status}</td>
+              <td
+                className={trouble?.work_status === 'Запланировано' ? 'trouble-status-1' : trouble?.work_status === 'В процессе' ? 'trouble-status-2' : trouble?.work_status === 'Завершено' ? 'trouble-status-3' : ''}
+              >{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
               <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
               <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>

@@ -65,6 +65,10 @@
   padding-bottom: 10px;
 }
 
+.single-trouble-modal-container td:last-child {
+  padding-left: 10px;
+}
+
 @keyframes spin {
   from {transform: rotate(0)}
   to {transform: rotate(360deg)}

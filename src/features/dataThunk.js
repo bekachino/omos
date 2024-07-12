@@ -119,21 +119,15 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {
   try {
-    const formDataToHydra = new FormData();
     const formDataToBitrix = new FormData();
     
     for (const key in data) {
-      if (['addresses', 'title', 'post_type', 'image', 'text'].includes(key)) {
-        if (key === 'addresses') {
-          formDataToHydra.append(key, JSON.stringify(data[key]));
-        } else if (key === 'image') {
-          formDataToHydra.append(key, data[key]);
-        } else formDataToHydra.append(key, data[key]);
+      if (key === 'addresses') {
+        formDataToBitrix.append(key, JSON.stringify(data[key]));
       } else formDataToBitrix.append(key, data[key]);
     }
     
     await axiosApi.post(`incident/create/`, formDataToBitrix);
-    await axiosApi.post(`send_news_to/`, formDataToHydra);
   } catch (e) {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
