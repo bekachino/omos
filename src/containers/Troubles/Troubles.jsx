@@ -4,7 +4,7 @@ import {
 } from "../../assets/post-new-trouble.svg";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getTroubles } from "../../features/dataThunk";
-import { formatDate } from "../../constants";
+import { formatDate, formatDuration } from "../../constants";
 import CreateTroubleForm
   from "../../components/CreateTroubleForm/CreateTroubleForm";
 import Button from "../../components/Button/Button";
@@ -86,6 +86,7 @@ const Troubles = () => {
             <th>Статус</th>
             <th>Время падения</th>
             <th>Время восставновл.</th>
+            <th>Вр. отсутств. сервиса</th>
             <th>Кол-во абонентов</th>
             <th>Квадрат</th>
             <th>Сторона аварии (Элкат/Скайнет)</th>
@@ -101,7 +102,8 @@ const Troubles = () => {
               <td>{trouble?.id}</td>
               <td>{trouble?.work_status}</td>
               <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
-              <td>{trouble?.resolved_at ? formatDate(trouble?.resolved_at) : '-'}</td>
+              <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
+              <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
               <td>{trouble?.subscriber_count}</td>
               <td>{trouble?.location}</td>
               <td>{trouble?.side_accident}</td>

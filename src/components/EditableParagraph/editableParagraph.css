@@ -9,6 +9,7 @@
   width: 100%;
   outline: none;
   font-size: 14px;
+  resize: vertical;
 }
 
 .editable-paragraph-input:focus {

@@ -79,9 +79,9 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     await dispatch(postTrouble({
       addresses, ...state,
     }));
-    toggleModal();
-    setState(null);
-    setAddresses([]);
+    //toggleModal();
+    //setState(null);
+    //setAddresses([]);
   };
   
   return (

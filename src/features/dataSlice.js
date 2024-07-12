@@ -1,10 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   editCause,
+  editComment,
   editSideAccident,
-  editSolution, editWorkStatus, getCauses,
-  getIncidentTypes, getLocations, getSideAccidentStatuses, getTrouble,
-  getTroubles, getWorkStatuses, getWorkTypes, postTrouble,
+  editSolution,
+  editWorkStatus,
+  getCauses,
+  getIncidentTypes,
+  getLocations,
+  getSideAccidentStatuses,
+  getTrouble,
+  getTroubles,
+  getWorkStatuses,
+  getWorkTypes,
+  postTrouble,
 } from "./dataThunk";
 
 const initialState = {
@@ -23,6 +32,7 @@ const initialState = {
   editSolutionLoading: false,
   editSideAccidentLoading: false,
   editWorkStatusLoading: false,
+  editCommentLoading: false,
   editCauseLoading: false,
   getSideAccidentStatusesLoading: false,
   getWorkStatusesLoading: false,
@@ -34,14 +44,12 @@ const initialState = {
 };
 
 const DataSlice = createSlice({
-  name: "data", initialState,
-  reducers: {
+  name: "data", initialState, reducers: {
     resetAlertMessage: state => {
       state.successMessage = false;
       state.errorMessage = false;
     },
-  },
-  extraReducers: (builder) => {
+  }, extraReducers: (builder) => {
     builder.addCase(getTroubles.pending, (state) => {
       state.troublesLoading = true;
     });
@@ -112,7 +120,7 @@ const DataSlice = createSlice({
       state.workStatuses = res || [];
       state.getWorkStatusesLoading = false;
     });
-    builder.addCase(getWorkStatuses.rejected, (state, { payload: err }) => {
+    builder.addCase(getWorkStatuses.rejected, (state) => {
       state.getWorkStatusesLoading = false;
     });
     
@@ -123,7 +131,7 @@ const DataSlice = createSlice({
       state.causes = res || [];
       state.getCausesLoading = false;
     });
-    builder.addCase(getCauses.rejected, (state, { payload: err }) => {
+    builder.addCase(getCauses.rejected, (state) => {
       state.getCausesLoading = false;
     });
     
@@ -146,7 +154,7 @@ const DataSlice = createSlice({
       state.successMessage = '';
       state.errorMessage = '';
     });
-    builder.addCase(editSolution.fulfilled, (state, { payload: res }) => {
+    builder.addCase(editSolution.fulfilled, (state) => {
       state.editSolutionLoading = false;
       state.successMessage = 'Решение изменено';
     });
@@ -160,7 +168,7 @@ const DataSlice = createSlice({
       state.successMessage = '';
       state.errorMessage = '';
     });
-    builder.addCase(editSideAccident.fulfilled, (state, { payload: res }) => {
+    builder.addCase(editSideAccident.fulfilled, (state) => {
       state.editSideAccidentLoading = false;
       state.successMessage = 'Сторона аварии изменена';
     });
@@ -174,7 +182,7 @@ const DataSlice = createSlice({
       state.successMessage = '';
       state.errorMessage = '';
     });
-    builder.addCase(editWorkStatus.fulfilled, (state, { payload: res }) => {
+    builder.addCase(editWorkStatus.fulfilled, (state) => {
       state.editWorkStatusLoading = false;
       state.successMessage = 'Статус изменён';
     });
@@ -188,12 +196,26 @@ const DataSlice = createSlice({
       state.successMessage = '';
       state.errorMessage = '';
     });
-    builder.addCase(editCause.fulfilled, (state, { payload: res }) => {
+    builder.addCase(editCause.fulfilled, (state) => {
       state.editCauseLoading = false;
       state.successMessage = 'Причина изменена';
     });
     builder.addCase(editCause.rejected, (state, { payload: res }) => {
       state.editCauseLoading = false;
+      state.errorMessage = res;
+    });
+    
+    builder.addCase(editComment.pending, (state) => {
+      state.editCommentLoading = true;
+      state.successMessage = '';
+      state.errorMessage = '';
+    });
+    builder.addCase(editComment.fulfilled, (state) => {
+      state.editCommentLoading = false;
+      state.successMessage = 'Комментарий сохранён';
+    });
+    builder.addCase(editComment.rejected, (state, { payload: res }) => {
+      state.editCommentLoading = false;
       state.errorMessage = res;
     });
   },

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './singleTroubleModal.css';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import EditableParagraph from "../EditableParagraph/EditableParagraph";
 import {
   editCause,
+  editComment,
   editSideAccident,
   editSolution,
   editWorkStatus,
@@ -13,6 +14,8 @@ import {
   getWorkStatuses
 } from "../../features/dataThunk";
 import EditableSelect from "../EditableSelect/EditableSelect";
+import TextArea from "../TextArea/TextArea";
+import Button from "../Button/Button";
 
 const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
   const dispatch = useAppDispatch();
@@ -26,9 +29,12 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     getCausesLoading,
     causes,
   } = useAppSelector(state => state.dataState);
+  const [commentText, setCommentText] = useState('');
+  const [solution, setSolution] = useState('');
   
   useEffect(() => {
     if (troubleId && open) {
+      setSolution('');
       dispatch(getTrouble(troubleId));
       dispatch(getSideAccidentStatuses());
       dispatch(getWorkStatuses());
@@ -36,9 +42,11 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     }
   }, [dispatch, open, troubleId]);
   
-  const onSolutionEdit = async (e, value) => {
-    e.preventDefault();
-    await dispatch(editSolution({ solution: value || '', id: trouble?.id, }))
+  const onSolutionEdit = async (e) => {
+    e?.preventDefault();
+    await dispatch(editSolution({
+      solution: solution || '', id: trouble?.id,
+    }))
     toggleModal();
   };
   
@@ -66,6 +74,14 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     toggleModal();
   };
   
+  const onCommentEdit = async (e) => {
+    e?.preventDefault();
+    await dispatch(editComment({
+      comment_text: solution || '', post_id: trouble?.bitrix_post_id,
+    }))
+    toggleModal();
+  };
+  
   return (
     <div
       className='single-trouble-modal-container'
@@ -82,12 +98,20 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
             <tr>
               <td>Решение</td>
               <td>
-                <EditableParagraph
-                  value={trouble?.solution}
-                  onSubmit={onSolutionEdit}
-                  open={open}
-                  required
-                />
+                <form onSubmit={onSolutionEdit}>
+                  <TextArea label='Введите решение...'
+                    value={solution}
+                    onChange={e => setSolution(e.target.value)}
+                    required
+                  />
+                  <Button variant='success'
+                    type='submit'
+                    style={{
+                      padding: '4px 8px', width: '100%'
+                    }}
+                    disabled={!solution}
+                  >Сохранить</Button>
+                </form>
               </td>
             </tr>
             <tr>
@@ -125,7 +149,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
               </td>
             </tr>
             <tr>
-              <td>Статус</td>
+              <td>Причина</td>
               <td>
                 <EditableSelect label='Причина'
                   name='cause'
@@ -140,6 +164,25 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                       value={status?.value}>{status?.value}</div>
                   ))}
                 </EditableSelect>
+              </td>
+            </tr>
+            <tr>
+              <td>Комментарий</td>
+              <td>
+                <form onSubmit={onCommentEdit}>
+                  <TextArea label='Введите комментарий...'
+                    value={commentText}
+                    onChange={e => setCommentText(e.target.value)}
+                    required
+                  />
+                  <Button variant='success'
+                    type='submit'
+                    style={{
+                      padding: '4px 8px', width: '100%'
+                    }}
+                    disabled={!commentText}
+                  >Сохранить</Button>
+                </form>
               </td>
             </tr>
             </tbody>

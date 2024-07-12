@@ -182,3 +182,13 @@ export const editCause = createAsyncThunk("data/editCause", async (data, {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
+
+export const editComment = createAsyncThunk("data/editComment", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    await axiosApi.post(`incident_list/`, data);
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});

@@ -12,7 +12,7 @@
   text-align: center;
 }
 
-.button:active {
+.button:active:not(:disabled) {
   transform: scale(0.92);
 }
 
@@ -29,4 +29,9 @@
 .button[variant=error] {
   border-color: #E31A1A;
   color: #E31A1A;
+}
+
+.button:disabled {
+  border-color: #d6d6d6;
+  color: #d6d6d6;
 }
