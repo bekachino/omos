@@ -3,9 +3,14 @@ import './singleTroubleModal.css';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import EditableParagraph from "../EditableParagraph/EditableParagraph";
 import {
+  editCause,
   editSideAccident,
-  editSolution, getSideAccidentStatuses,
-  getTrouble
+  editSolution,
+  editWorkStatus,
+  getCauses,
+  getSideAccidentStatuses,
+  getTrouble,
+  getWorkStatuses
 } from "../../features/dataThunk";
 import EditableSelect from "../EditableSelect/EditableSelect";
 
@@ -16,12 +21,18 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     troubleLoading,
     sideAccidentStatuses,
     getSideAccidentStatusesLoading,
+    workStatuses,
+    getWorkStatusesLoading,
+    getCausesLoading,
+    causes,
   } = useAppSelector(state => state.dataState);
   
   useEffect(() => {
-    if (troubleId) {
+    if (troubleId && open) {
       dispatch(getTrouble(troubleId));
       dispatch(getSideAccidentStatuses());
+      dispatch(getWorkStatuses());
+      dispatch(getCauses());
     }
   }, [dispatch, open, troubleId]);
   
@@ -39,6 +50,22 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     toggleModal();
   };
   
+  const onWorkStatusEdit = async (e, value) => {
+    e?.preventDefault();
+    await dispatch(editWorkStatus({
+      status: value || '', id: trouble?.id,
+    }))
+    toggleModal();
+  };
+  
+  const onCauseEdit = async (e, value) => {
+    e?.preventDefault();
+    await dispatch(editCause({
+      cause: value || '', id: trouble?.id,
+    }))
+    toggleModal();
+  };
+  
   return (
     <div
       className='single-trouble-modal-container'
@@ -48,7 +75,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
       <div className='single-trouble-modal'
         onClick={e => e.stopPropagation()}
       >
-        {!troubleLoading || !getSideAccidentStatusesLoading ? <>
+        {!troubleLoading && !getSideAccidentStatusesLoading && !getWorkStatusesLoading && !getCausesLoading ? <>
           <h3>Детальный просмотр</h3>
           <table>
             <tbody>
@@ -66,8 +93,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
             <tr>
               <td>Сторона аварии</td>
               <td>
-                <EditableSelect label='Причина'
-                  name='incident_type'
+                <EditableSelect label='Сторона аварии'
                   value={trouble?.side_accident}
                   onSubmit={onSideAccidentEdit}
                   open={open}
@@ -76,6 +102,42 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                   {sideAccidentStatuses.map(side => side?.value).map((type) => (
                     <div className='select-option'
                       value={type}>{type}</div>
+                  ))}
+                </EditableSelect>
+              </td>
+            </tr>
+            <tr>
+              <td>Статус</td>
+              <td>
+                <EditableSelect label='Статус'
+                  name='status'
+                  value={trouble?.work_status}
+                  onSubmit={onWorkStatusEdit}
+                  open={open}
+                  required
+                  isNotTypable
+                >
+                  {workStatuses.map((status) => (
+                    <div className='select-option'
+                      value={status?.value}>{status?.key}</div>
+                  ))}
+                </EditableSelect>
+              </td>
+            </tr>
+            <tr>
+              <td>Статус</td>
+              <td>
+                <EditableSelect label='Причина'
+                  name='cause'
+                  value={trouble?.cause}
+                  onSubmit={onCauseEdit}
+                  open={open}
+                  required
+                  isNotTypable
+                >
+                  {causes.map((status) => (
+                    <div className='select-option'
+                      value={status?.value}>{status?.value}</div>
                   ))}
                 </EditableSelect>
               </td>

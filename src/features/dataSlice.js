@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  editCause,
   editSideAccident,
-  editSolution,
+  editSolution, editWorkStatus, getCauses,
   getIncidentTypes, getLocations, getSideAccidentStatuses, getTrouble,
-  getTroubles, getWorkTypes, postTrouble,
+  getTroubles, getWorkStatuses, getWorkTypes, postTrouble,
 } from "./dataThunk";
 
 const initialState = {
@@ -13,13 +14,19 @@ const initialState = {
   work_types: [],
   locations: [],
   sideAccidentStatuses: [],
+  workStatuses: [],
+  causes: [],
   troublesLoading: false,
   troubleLoading: false,
   locationsLoading: false,
   createTroubleLoading: false,
   editSolutionLoading: false,
   editSideAccidentLoading: false,
+  editWorkStatusLoading: false,
+  editCauseLoading: false,
   getSideAccidentStatusesLoading: false,
+  getWorkStatusesLoading: false,
+  getCausesLoading: false,
   successMessage: '',
   errorMessage: '',
   troublesTabs: [],
@@ -98,18 +105,40 @@ const DataSlice = createSlice({
       state.getSideAccidentStatusesLoading = false;
     });
     
+    builder.addCase(getWorkStatuses.pending, (state) => {
+      state.getWorkStatusesLoading = true;
+    });
+    builder.addCase(getWorkStatuses.fulfilled, (state, { payload: res }) => {
+      state.workStatuses = res || [];
+      state.getWorkStatusesLoading = false;
+    });
+    builder.addCase(getWorkStatuses.rejected, (state, { payload: err }) => {
+      state.getWorkStatusesLoading = false;
+    });
+    
+    builder.addCase(getCauses.pending, (state) => {
+      state.getCausesLoading = true;
+    });
+    builder.addCase(getCauses.fulfilled, (state, { payload: res }) => {
+      state.causes = res || [];
+      state.getCausesLoading = false;
+    });
+    builder.addCase(getCauses.rejected, (state, { payload: err }) => {
+      state.getCausesLoading = false;
+    });
+    
     builder.addCase(postTrouble.pending, (state) => {
       state.createTroubleLoading = true;
       state.successMessage = '';
       state.errorMessage = '';
     });
-    builder.addCase(postTrouble.fulfilled, (state, { payload: res }) => {
+    builder.addCase(postTrouble.fulfilled, (state) => {
       state.createTroubleLoading = false;
       state.successMessage = 'Новость успешно создана';
     });
-    builder.addCase(postTrouble.rejected, (state, { payload: res }) => {
+    builder.addCase(postTrouble.rejected, (state, { payload: err }) => {
       state.createTroubleLoading = false;
-      state.errorMessage = res;
+      state.errorMessage = err;
     });
     
     builder.addCase(editSolution.pending, (state) => {
@@ -137,6 +166,34 @@ const DataSlice = createSlice({
     });
     builder.addCase(editSideAccident.rejected, (state, { payload: res }) => {
       state.editSideAccidentLoading = false;
+      state.errorMessage = res;
+    });
+    
+    builder.addCase(editWorkStatus.pending, (state) => {
+      state.editWorkStatusLoading = true;
+      state.successMessage = '';
+      state.errorMessage = '';
+    });
+    builder.addCase(editWorkStatus.fulfilled, (state, { payload: res }) => {
+      state.editWorkStatusLoading = false;
+      state.successMessage = 'Статус изменён';
+    });
+    builder.addCase(editWorkStatus.rejected, (state, { payload: res }) => {
+      state.editWorkStatusLoading = false;
+      state.errorMessage = res;
+    });
+    
+    builder.addCase(editCause.pending, (state) => {
+      state.editCauseLoading = true;
+      state.successMessage = '';
+      state.errorMessage = '';
+    });
+    builder.addCase(editCause.fulfilled, (state, { payload: res }) => {
+      state.editCauseLoading = false;
+      state.successMessage = 'Причина изменена';
+    });
+    builder.addCase(editCause.rejected, (state, { payload: res }) => {
+      state.editCauseLoading = false;
       state.errorMessage = res;
     });
   },

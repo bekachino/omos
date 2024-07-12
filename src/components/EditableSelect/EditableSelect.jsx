@@ -2,7 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 
 const EditableSelect = ({
-  label, type, name, value, onSubmit, required, loading, children, open,
+  label,
+  type,
+  value,
+  onSubmit,
+  required,
+  loading,
+  children,
+  open,
+  isNotTypable
 }) => {
   const inputRef = useRef(null);
   const [state, setState] = useState('');
@@ -21,13 +29,12 @@ const EditableSelect = ({
     >
       <input type={type || 'text'}
         className='select-input'
-        name={name}
         value={state}
         placeholder={label}
         ref={inputRef}
         required={required}
         autoComplete='off'
-        onChange={e => setState(e.target.value)}
+        onChange={e => !isNotTypable && setState(e.target.value)}
       />
       <div className='select-toggler'>
         <div className='select-arrow'><SelectArrow/></div>
@@ -43,7 +50,7 @@ const EditableSelect = ({
             value={item.props?.value}
             onMouseDown={() => {
               setState(item.props?.children);
-              onSubmit(null, item.props?.children)
+              onSubmit(null, item.props?.value)
             }}
           >
             {item.props?.children}

@@ -27,6 +27,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     description: 'test description',
     title: 'test title',
     post_type: 'dist',
+    text: 'test script'
   });
   const [addresses, setAddresses] = useState([1, 2]);
   

@@ -87,6 +87,34 @@ export const getSideAccidentStatuses = createAsyncThunk("data/getSideAccidentSta
   }
 });
 
+export const getWorkStatuses = createAsyncThunk("data/getWorkStatuses", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`choices/work-status/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
+export const getCauses = createAsyncThunk("data/getCauses", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`choices/causes/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {
@@ -104,8 +132,8 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
       } else formDataToBitrix.append(key, data[key]);
     }
     
-    const reqToBitrix = await axiosApi.post(`incident/create/`, formDataToBitrix);
-    //const reqToHydra = await axiosApi.post(`send_news_to/`, formDataToHydra);
+    await axiosApi.post(`incident/create/`, formDataToBitrix);
+    await axiosApi.post(`send_news_to/`, formDataToHydra);
   } catch (e) {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
@@ -127,6 +155,28 @@ export const editSideAccident = createAsyncThunk("data/editSideAccident", async 
 }) => {
   try {
     const response = await axiosApi.patch(`side_incident/update/${data?.id}/`, { side_accident: data?.side_accident });
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const editWorkStatus = createAsyncThunk("data/editWorkStatus", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi.post(`incidents/${data?.id}/update-status/`, { status: data?.status });
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const editCause = createAsyncThunk("data/editCause", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi.patch(`incidents/${data?.id}/update_cause/`, { cause: data?.cause });
     return response.data;
   } catch (e) {
     return rejectWithValue(smthIsWrongErrorMessage);
