@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './singleTroubleModal.css';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import EditableParagraph from "../EditableParagraph/EditableParagraph";
 import {
   editCause,
   editComment,
