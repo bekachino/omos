@@ -18,7 +18,7 @@ const Select = ({
       <input type={type || 'text'}
         className='select-input'
         name={name}
-        value={name === 'locations' ? '' : value ? currentValue : ''}
+        value={value ? currentValue : ''}
         placeholder={label}
         ref={inputRef}
         required={required}

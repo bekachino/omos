@@ -16,20 +16,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const {
     incident_types, work_types, locations, locationsLoading,
   } = useAppSelector(state => state.dataState);
-  const [state, setState] = useState({
-    location: 'test location',
-    subscriber_count: '100',
-    olt: 'test olt',
-    port: 'test port',
-    work_duration: '10 часов',
-    incident_type: 'maintenance',
-    work_type: 'expansion',
-    description: 'test description',
-    title: 'test title',
-    post_type: 'dist',
-    text: 'test script'
-  });
-  const [addresses, setAddresses] = useState([1, 2]);
+  const [state, setState] = useState(null);
+  const [addresses, setAddresses] = useState();
   
   useEffect(() => {
     dispatch(getIncidentTypes());
@@ -79,9 +67,9 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     await dispatch(postTrouble({
       addresses, ...state,
     }));
-    //toggleModal();
-    //setState(null);
-    //setAddresses([]);
+    toggleModal();
+    setState(null);
+    setAddresses([]);
   };
   
   return (
@@ -181,7 +169,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         </Select>}
         <div className='picked-locations'>
           {locations.map((location) => (
-            addresses.includes(location.id) && <span
+            addresses?.includes(location.id) && <span
               className='picked-location'
               onClick={() => onPickedLocationClick(location.id)}
             >
@@ -195,7 +183,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
-        <TextArea label='Скрипт'
+        <TextArea label='Текст абонентского'
           name='text'
           value={state?.text}
           onChange={handleChange}

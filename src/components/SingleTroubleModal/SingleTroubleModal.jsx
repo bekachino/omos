@@ -77,7 +77,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
   const onCommentEdit = async (e) => {
     e?.preventDefault();
     await dispatch(editComment({
-      comment_text: solution || '', post_id: trouble?.bitrix_post_id,
+      comment_text: commentText || '', post_id: trouble?.bitrix_post_id,
     }))
     toggleModal();
   };
@@ -97,27 +97,51 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
             <tbody>
             <tr>
               <td>Номер</td>
-              <td>{trouble?.id}</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.id}
+                </span>
+              </td>
             </tr>
             <tr>
               <td>Время падения</td>
-              <td>{trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.reported_at ? formatDate(trouble?.reported_at) : '-'}
+                </span>
+              </td>
             </tr>
             <tr>
               <td>Время восстановления</td>
-              <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}
+                </span>
+              </td>
             </tr>
             <tr>
               <td>Вр. отсутств. сервиса</td>
-              <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.duration ? formatDuration(trouble?.duration) : '-'}
+                </span>
+              </td>
             </tr>
             <tr>
               <td>Кол-во абонентов</td>
-              <td>{trouble?.subscriber_count}</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.subscriber_count}
+                </span>
+              </td>
             </tr>
             <tr>
-              <td>Квадрат</td>
-              <td>{trouble?.location}</td>
+              <td>Локация</td>
+              <td className='trouble-value-outlined'>
+                <span>
+                {trouble?.location}
+                </span>
+              </td>
             </tr>
             <tr>
               <td>Решение</td>
