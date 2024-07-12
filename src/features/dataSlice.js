@@ -59,8 +59,9 @@ const DataSlice = createSlice({
       state.troublesLoading = false;
       state.troublesTabs = Array.from({ length: tabsCount }, (_, index) => index + 1);
     });
-    builder.addCase(getTroubles.rejected, (state) => {
+    builder.addCase(getTroubles.rejected, (state, {payload: err}) => {
       state.troublesLoading = false;
+      state.errorMessage = err;
     })
     
     builder.addCase(getTrouble.pending, (state) => {

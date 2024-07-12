@@ -10,10 +10,7 @@ export const getTroubles = createAsyncThunk("data/getTroubles", async (data, {
     const response = await axiosApi(`incident_list/?page=${data.currentTab || 1}&page_size=${data.page_size}`);
     return { ...response.data, page_size: data.page_size };
   } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 400) {
-      return rejectWithValue(smthIsWrongErrorMessage);
-    }
-    throw e;
+    return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
 
