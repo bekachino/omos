@@ -156,7 +156,7 @@ export const editWorkStatus = createAsyncThunk("data/editWorkStatus", async (dat
   rejectWithValue
 }) => {
   try {
-    const response = await axiosApi.post(`incidents/${data?.id}/update-status/`, { status: data?.status });
+    const response = await axiosApi.patch(`incidents/${data?.id}/update-status/`, { status: data?.status });
     return response.data;
   } catch (e) {
     return rejectWithValue(smthIsWrongErrorMessage);

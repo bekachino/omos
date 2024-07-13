@@ -209,7 +209,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                 >
                   {causes.map((status) => (
                     <div className='select-option'
-                      value={status?.value}>{status?.value}</div>
+                      value={status?.key}>{status?.value}</div>
                   ))}
                 </EditableSelect>
               </td>
