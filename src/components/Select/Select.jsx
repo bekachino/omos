@@ -8,7 +8,10 @@ const Select = ({
   const inputRef = useRef(null);
   const [currentValue, setCurrentValue] = useState('');
   
-  const onFocus = () => inputRef.current.focus();
+  const onFocus = () => {
+    inputRef.current.focus();
+    setCurrentValue('');
+  };
   
   return (
     <div
