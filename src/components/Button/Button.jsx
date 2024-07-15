@@ -1,16 +1,25 @@
 import React from 'react';
 import './button.css';
 
-const Button = ({ variant, type, onClick, disabled, style, children }) => {
+const Button = ({
+  variant,
+  type,
+  onClick,
+  disabled,
+  loading,
+  style,
+  children
+}) => {
   return (
-    <button className='button'
+    <button className={`button ${loading ? 'loading' : ''}`}
       type={type || 'button'}
       onClick={onClick}
       style={style}
-      disabled={disabled}
+      disabled={disabled || loading}
       variant={variant}
+      loading={loading}
     >
-      {children}
+      {!loading && children}
     </button>
   );
 };

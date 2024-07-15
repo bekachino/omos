@@ -10,7 +10,7 @@ import {
   getLocations,
   getSideAccidentStatuses,
   getTrouble,
-  getTroubles,
+  getTroubles, getWorkers,
   getWorkStatuses,
   getWorkTypes,
   postTrouble,
@@ -25,6 +25,7 @@ const initialState = {
   sideAccidentStatuses: [],
   workStatuses: [],
   causes: [],
+  workers: [],
   troublesLoading: false,
   troubleLoading: false,
   locationsLoading: false,
@@ -34,9 +35,11 @@ const initialState = {
   editWorkStatusLoading: false,
   editCommentLoading: false,
   editCauseLoading: false,
+  incidentTypesLoading: false,
   getSideAccidentStatusesLoading: false,
   getWorkStatusesLoading: false,
   getCausesLoading: false,
+  getWorkersLoading: false,
   successMessage: '',
   errorMessage: '',
   troublesTabs: [],
@@ -59,7 +62,7 @@ const DataSlice = createSlice({
       state.troublesLoading = false;
       state.troublesTabs = Array.from({ length: tabsCount }, (_, index) => index + 1);
     });
-    builder.addCase(getTroubles.rejected, (state, {payload: err}) => {
+    builder.addCase(getTroubles.rejected, (state, { payload: err }) => {
       state.troublesLoading = false;
       state.errorMessage = err;
     })
@@ -75,12 +78,15 @@ const DataSlice = createSlice({
       state.troubleLoading = false;
     });
     
-    builder.addCase(getIncidentTypes.pending, () => {
+    builder.addCase(getIncidentTypes.pending, (state) => {
+      state.incidentTypesLoading = true;
     });
     builder.addCase(getIncidentTypes.fulfilled, (state, { payload: res }) => {
+      state.incidentTypesLoading = false;
       state.incident_types = res || [];
     });
-    builder.addCase(getIncidentTypes.rejected, () => {
+    builder.addCase(getIncidentTypes.rejected, (state) => {
+      state.incidentTypesLoading = false;
     });
     
     builder.addCase(getWorkTypes.pending, () => {
@@ -134,6 +140,17 @@ const DataSlice = createSlice({
     });
     builder.addCase(getCauses.rejected, (state) => {
       state.getCausesLoading = false;
+    });
+    
+    builder.addCase(getWorkers.pending, (state) => {
+      state.getWorkersLoading = true;
+    });
+    builder.addCase(getWorkers.fulfilled, (state, { payload: res }) => {
+      state.workers = res || [];
+      state.getWorkersLoading = false;
+    });
+    builder.addCase(getWorkers.rejected, (state) => {
+      state.getWorkersLoading = false;
     });
     
     builder.addCase(postTrouble.pending, (state) => {

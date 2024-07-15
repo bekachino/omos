@@ -112,6 +112,20 @@ export const getCauses = createAsyncThunk("data/getCauses", async (location_type
   }
 });
 
+export const getWorkers = createAsyncThunk("data/getWorkers", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`workers_list/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {

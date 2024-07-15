@@ -6,7 +6,7 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getIncidentTypes, getLocations, getWorkTypes, postTrouble
+  getIncidentTypes, getLocations, getWorkers, getWorkTypes, postTrouble
 } from "../../features/dataThunk";
 import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
@@ -14,7 +14,14 @@ import FileUpload from "../FileUpload/FileUpload";
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
   const {
-    incident_types, work_types, locations, locationsLoading,
+    incident_types,
+    incidentTypesLoading,
+    work_types,
+    locations,
+    locationsLoading,
+    workers,
+    workersLoading,
+    createTroubleLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState();
@@ -22,6 +29,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   useEffect(() => {
     dispatch(getIncidentTypes());
     dispatch(getWorkTypes());
+    dispatch(getWorkers());
   }, [dispatch]);
   
   useEffect(() => {
@@ -111,11 +119,25 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
+        <Select label='Ответственный'
+          name='responsible'
+          value={state?.responsible}
+          options={workers}
+          onChange={handleChange}
+          loading={workersLoading}
+          required
+        >
+          {workers.map((type) => (
+            <div className='select-option'
+              value={type?.value}>{type?.key}</div>
+          ))}
+        </Select>
         <Select label='Причина'
           name='incident_type'
           value={state?.incident_type}
           options={incident_types}
           onChange={handleChange}
+          loading={incidentTypesLoading}
           required
         >
           {incident_types.map((type) => (
@@ -123,15 +145,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               value={type?.key}>{type?.value}</div>
           ))}
         </Select>
-        {
-          state?.incident_type === 'maintenance' &&
-          <Input label='Длительность'
-            name='work_duration'
-            value={state?.work_duration}
-            onChange={handleChange}
-            required
-          />
-        }
+        {state?.incident_type === 'maintenance' && <Input label='Длительность'
+          name='work_duration'
+          value={state?.work_duration}
+          onChange={handleChange}
+          required
+        />}
         {state?.incident_type === 'maintenance' && <Select label='Тип работы'
           name='work_type'
           value={state?.work_type}
@@ -210,6 +229,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             variant='success'
             style={{ padding: '8px 10px', flexGrow: 5 }}
             type='submit'
+            loading={createTroubleLoading}
           >
             Добавить
           </Button>
