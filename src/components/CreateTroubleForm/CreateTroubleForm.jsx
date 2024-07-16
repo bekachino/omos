@@ -15,6 +15,7 @@ import {
 } from "../../features/dataThunk";
 import { locationTypes, regions } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
+import CreateLocationModal from "../CreateLocationModal/CreateLocationModal";
 
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const [addresses, setAddresses] = useState([]);
   const [pickedLocations, setPickedLocations] = useState([]);
   const [currentRegion, setCurrentRegion] = useState('');
+  const [createLocationModalOpen, setCreateLocationModalOpen] = useState(false);
   
   useEffect(() => {
     dispatch(getIncidentTypes());
@@ -89,6 +91,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     ));
   };
   
+  const toggleCreateLocationModal = (value) => setCreateLocationModalOpen(value);
+  
   const onPickedLocationClick = (locationId) => {
     const filteredAddresses = addresses.filter(address => address !== locationId);
     setAddresses(filteredAddresses);
@@ -108,8 +112,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     setState(null);
     setAddresses([]);
   };
-  
-  console.log(pickedLocations, addresses);
   
   return (
     <div className='create-trouble-form-container'
@@ -136,16 +138,23 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           ) || [])}
         </Select>
         {currentRegion && <>
-          <Select label='Битрикс локации'
-            name='locations'
-            onChange={handleLocationsChange}
-            loading={bitrixLocationsLoading}
-          >
-            {bitrixLocations?.map((type) => (
-              <div className='select-option'
-                value={type?.name}>{type?.name}</div>
-            ) || [])}
-          </Select>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', }}>
+            <Button variant='success'
+              onClick={() => toggleCreateLocationModal(true)}
+              style={{ maxHeight: '30px', fontSize: '20px' }}
+            >+</Button>
+            <Select label='Битрикс локации'
+              name='locations'
+              onChange={handleLocationsChange}
+              loading={bitrixLocationsLoading}
+              style={{ flexGrow: 1 }}
+            >
+              {bitrixLocations?.map((type) => (
+                <div className='select-option'
+                  value={type?.name}>{type?.name}</div>
+              ) || [])}
+            </Select>
+          </div>
           <div className='picked-locations'>
             {bitrixLocations?.map((location) => (
               pickedLocations?.includes(location.name) && <span
@@ -289,6 +298,10 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           </Button>
         </div>
       </form>
+      <CreateLocationModal
+        toggleModal={toggleCreateLocationModal}
+        open={createLocationModalOpen}
+      />
     </div>
   );
 };

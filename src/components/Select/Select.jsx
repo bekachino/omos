@@ -3,7 +3,7 @@ import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 import './select.css';
 
 const Select = ({
-  label, type, name, onChange, required, loading, children
+  label, type, name, onChange, required, loading, style, children
 }) => {
   const inputRef = useRef(null);
   const [currentValue, setCurrentValue] = useState('');
@@ -17,6 +17,7 @@ const Select = ({
     <div
       className='select-container'
       onClick={onFocus}
+      style={style}
     >
       <input type={type || 'text'}
         className='select-input'
