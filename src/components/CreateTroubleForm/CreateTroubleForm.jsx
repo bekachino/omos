@@ -13,7 +13,7 @@ import {
   getWorkTypes,
   postTrouble
 } from "../../features/dataThunk";
-import { locationTypes } from "../../constants";
+import { locationTypes, regions } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
 
 const CreateTroubleForm = ({ open, toggleModal }) => {
@@ -33,13 +33,17 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [pickedLocations, setPickedLocations] = useState([]);
+  const [currentRegion, setCurrentRegion] = useState('');
   
   useEffect(() => {
     dispatch(getIncidentTypes());
     dispatch(getWorkTypes());
     dispatch(getWorkers());
-    dispatch(getBitrixLocations());
   }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(getBitrixLocations(currentRegion));
+  }, [currentRegion, dispatch]);
   
   useEffect(() => {
     if (state?.post_type) {
@@ -64,6 +68,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     }
   };
   
+  const handleCurrentRegionChange = e => {
+    setCurrentRegion(e.target.value);
+    setPickedLocations([]);
+  };
+  
   const handleFileChange = (e) => {
     setState((prevState) => (
       {
@@ -85,8 +94,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     setAddresses(filteredAddresses);
   };
   
-  const onPickedBitrixLocationClick = (locationId) => {
-    const filteredAddresses = pickedLocations.filter(location => location !== locationId);
+  const onPickedBitrixLocationClick = (locationName) => {
+    const filteredAddresses = pickedLocations.filter(location => location !== locationName);
     setPickedLocations(filteredAddresses);
   };
   
@@ -99,6 +108,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     setState(null);
     setAddresses([]);
   };
+  
+  console.log(pickedLocations, addresses);
   
   return (
     <div className='create-trouble-form-container'
@@ -115,32 +126,37 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
-        <Input label='Локация'
-          name='location'
-          value={state?.location}
-          onChange={handleChange}
-          required
-        />
-        <Select label='Битрикс локации'
-          name='locations'
-          onChange={handleLocationsChange}
-          loading={bitrixLocationsLoading}
+        <Select label='Выберите область'
+          onChange={handleCurrentRegionChange}
+          value={currentRegion}
         >
-          {bitrixLocations?.map((type) => (
+          {regions?.map((type) => (
             <div className='select-option'
-              value={type?.id}>{type?.name}</div>
+              value={type?.key}>{type?.value}</div>
           ) || [])}
         </Select>
-        <div className='picked-locations'>
-          {bitrixLocations?.map((location) => (
-            pickedLocations?.includes(location.id) && <span
-              className='picked-location'
-              onClick={() => onPickedBitrixLocationClick(location.id)}
-            >
+        {currentRegion && <>
+          <Select label='Битрикс локации'
+            name='locations'
+            onChange={handleLocationsChange}
+            loading={bitrixLocationsLoading}
+          >
+            {bitrixLocations?.map((type) => (
+              <div className='select-option'
+                value={type?.name}>{type?.name}</div>
+            ) || [])}
+          </Select>
+          <div className='picked-locations'>
+            {bitrixLocations?.map((location) => (
+              pickedLocations?.includes(location.name) && <span
+                className='picked-location'
+                onClick={() => onPickedBitrixLocationClick(location.name)}
+              >
               {location.name} &#10005;
             </span>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>}
         <Input label='Кол-во абонентов'
           name='subscriber_count'
           value={state?.subscriber_count}
@@ -151,13 +167,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           name='olt'
           value={state?.olt}
           onChange={handleChange}
-          required
         />
         <Input label='Порт'
           name='port'
           value={state?.port}
           onChange={handleChange}
-          required
         />
         <Select label='Ответственный'
           name='responsible'
@@ -269,7 +283,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             style={{ padding: '8px 10px', flexGrow: 5 }}
             type='submit'
             loading={createTroubleLoading}
-            disabled={!addresses?.length || pickedLocations?.length}
+            disabled={!addresses?.length || !pickedLocations?.length}
           >
             Добавить
           </Button>

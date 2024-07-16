@@ -70,11 +70,11 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
   }
 });
 
-export const getBitrixLocations = createAsyncThunk("data/getBitrixLocations", async (location_type, {
+export const getBitrixLocations = createAsyncThunk("data/getBitrixLocations", async (region, {
   rejectWithValue
 }) => {
   try {
-    const response = await axiosApi(`locations/`);
+    const response = await axiosApi(`locations/by_area/?area=${region}`);
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
