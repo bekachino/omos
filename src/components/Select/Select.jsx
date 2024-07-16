@@ -36,7 +36,7 @@ const Select = ({
           className='select-option'
         >
           Загрузка...
-        </div> : children.map((item) => (
+        </div> : children?.map((item) => (
           item.props?.children?.toLowerCase().includes(currentValue?.toLowerCase()) &&
           <div
             className={item.props?.className}

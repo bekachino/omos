@@ -4,7 +4,7 @@ import {
   editComment,
   editSideAccident,
   editSolution,
-  editWorkStatus,
+  editWorkStatus, getBitrixLocations,
   getCauses,
   getIncidentTypes,
   getLocations,
@@ -22,6 +22,8 @@ const initialState = {
   incident_types: [],
   work_types: [],
   locations: [],
+  bitrixLocations: [],
+  bitrixLocationsLoading: false,
   sideAccidentStatuses: [],
   workStatuses: [],
   causes: [],
@@ -107,6 +109,18 @@ const DataSlice = createSlice({
     });
     builder.addCase(getLocations.rejected, (state) => {
       state.locationsLoading = false;
+    });
+    
+    builder.addCase(getBitrixLocations.pending, (state) => {
+      state.bitrixLocations = [];
+      state.bitrixLocationsLoading = true;
+    });
+    builder.addCase(getBitrixLocations.fulfilled, (state, { payload: res }) => {
+      state.bitrixLocations = res || [];
+      state.bitrixLocationsLoading = false;
+    });
+    builder.addCase(getBitrixLocations.rejected, (state) => {
+      state.bitrixLocationsLoading = false;
     });
     
     builder.addCase(getSideAccidentStatuses.pending, (state) => {

@@ -28,6 +28,8 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     getWorkStatusesLoading,
     getCausesLoading,
     causes,
+    editSolutionLoading,
+    editCommentLoading,
   } = useAppSelector(state => state.dataState);
   const [commentText, setCommentText] = useState('');
   const [solution, setSolution] = useState('');
@@ -77,7 +79,10 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
   const onCommentEdit = async (e) => {
     e?.preventDefault();
     await dispatch(editComment({
-      comment_text: commentText || '', post_id: trouble?.bitrix_post_id,
+      comment_text: commentText || '',
+      post_id: trouble?.bitrix_post_id,
+      user_id: trouble?.responsible,
+      responsible: trouble?.responsible,
     }))
     toggleModal();
   };
@@ -157,6 +162,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     style={{
                       padding: '4px 8px', width: '100%'
                     }}
+                    loading={editSolutionLoading}
                     disabled={!solution}
                   >Сохранить</Button>
                 </form>
@@ -229,6 +235,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                       padding: '4px 8px', width: '100%'
                     }}
                     disabled={!commentText}
+                    loading={editCommentLoading}
                   >Сохранить</Button>
                 </form>
               </td>

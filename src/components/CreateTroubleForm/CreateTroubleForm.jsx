@@ -6,7 +6,12 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getIncidentTypes, getLocations, getWorkers, getWorkTypes, postTrouble
+  getBitrixLocations,
+  getIncidentTypes,
+  getLocations,
+  getWorkers,
+  getWorkTypes,
+  postTrouble
 } from "../../features/dataThunk";
 import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
@@ -19,17 +24,21 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     work_types,
     locations,
     locationsLoading,
+    bitrixLocations,
+    bitrixLocationsLoading,
     workers,
     workersLoading,
     createTroubleLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
-  const [addresses, setAddresses] = useState();
+  const [addresses, setAddresses] = useState([]);
+  const [pickedLocations, setPickedLocations] = useState([]);
   
   useEffect(() => {
     dispatch(getIncidentTypes());
     dispatch(getWorkTypes());
     dispatch(getWorkers());
+    dispatch(getBitrixLocations());
   }, [dispatch]);
   
   useEffect(() => {
@@ -42,6 +51,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const handleChange = e => setState({
     ...state, [e.target.name]: e.target.value
   });
+  
+  const handleLocationsChange = e => {
+    if (!pickedLocations.includes(e.target.value)) {
+      setPickedLocations([...pickedLocations, e.target.value]);
+    }
+  };
   
   const handleAddressesChange = e => {
     if (!addresses.includes(e.target.value)) {
@@ -70,10 +85,15 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     setAddresses(filteredAddresses);
   };
   
+  const onPickedBitrixLocationClick = (locationId) => {
+    const filteredAddresses = pickedLocations.filter(location => location !== locationId);
+    setPickedLocations(filteredAddresses);
+  };
+  
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      addresses, ...state,
+      addresses, ...state, locations: pickedLocations,
     }));
     toggleModal();
     setState(null);
@@ -101,6 +121,26 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           onChange={handleChange}
           required
         />
+        <Select label='Битрикс локации'
+          name='locations'
+          onChange={handleLocationsChange}
+          loading={bitrixLocationsLoading}
+        >
+          {bitrixLocations?.map((type) => (
+            <div className='select-option'
+              value={type?.id}>{type?.name}</div>
+          ) || [])}
+        </Select>
+        <div className='picked-locations'>
+          {bitrixLocations?.map((location) => (
+            pickedLocations?.includes(location.id) && <span
+              className='picked-location'
+              onClick={() => onPickedBitrixLocationClick(location.id)}
+            >
+              {location.name} &#10005;
+            </span>
+          ))}
+        </div>
         <Input label='Кол-во абонентов'
           name='subscriber_count'
           value={state?.subscriber_count}
@@ -175,9 +215,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               value={location?.key}>{location?.value}</div>
           ))}
         </Select>
-        {state?.post_type && <Select label='Локации'
+        {state?.post_type && <Select label='Локации для абонентского приложения'
           name='locations'
-          options={locations}
           onChange={handleAddressesChange}
           loading={locationsLoading}
         >
@@ -230,6 +269,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             style={{ padding: '8px 10px', flexGrow: 5 }}
             type='submit'
             loading={createTroubleLoading}
+            disabled={!addresses?.length || pickedLocations?.length}
           >
             Добавить
           </Button>

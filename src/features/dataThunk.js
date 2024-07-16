@@ -70,6 +70,20 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
   }
 });
 
+export const getBitrixLocations = createAsyncThunk("data/getBitrixLocations", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`locations/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const getSideAccidentStatuses = createAsyncThunk("data/getSideAccidentStatuses", async (location_type, {
   rejectWithValue
 }) => {
@@ -133,7 +147,7 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
     const formDataToBitrix = new FormData();
     
     for (const key in data) {
-      if (key === 'addresses') {
+      if (['addresses', 'locations'].includes(key)) {
         formDataToBitrix.append(key, JSON.stringify(data[key]));
       } else formDataToBitrix.append(key, data[key]);
     }
