@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  addLocation,
   editCause,
   editComment,
   editSideAccident,
@@ -42,6 +43,7 @@ const initialState = {
   getWorkStatusesLoading: false,
   getCausesLoading: false,
   getWorkersLoading: false,
+  addLocationLoading: false,
   successMessage: '',
   errorMessage: '',
   troublesTabs: [],
@@ -248,6 +250,18 @@ const DataSlice = createSlice({
     });
     builder.addCase(editComment.rejected, (state, { payload: res }) => {
       state.editCommentLoading = false;
+      state.errorMessage = res;
+    });
+    
+    builder.addCase(addLocation.pending, (state) => {
+      state.addLocationLoading = true;
+    });
+    builder.addCase(addLocation.fulfilled, (state) => {
+      state.addLocationLoading = false;
+      state.successMessage = 'Локация создана';
+    });
+    builder.addCase(addLocation.rejected, (state, { payload: res }) => {
+      state.addLocationLoading = false;
       state.errorMessage = res;
     });
   },

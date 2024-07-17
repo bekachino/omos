@@ -19,7 +19,7 @@ const Button = ({
       variant={variant}
       loading={loading}
     >
-      {!loading && children}
+      {loading ? ' ' : children}
     </button>
   );
 };

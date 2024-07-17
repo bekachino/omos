@@ -1,7 +1,7 @@
 import React from 'react';
 import './input.css';
 
-const Input = ({ label, type, name, value, onChange, required }) => {
+const Input = ({ label, type, name, value, onChange, disabled, required }) => {
   return (
     <div className='input-container'>
       <input type={type || 'text'}
@@ -10,6 +10,7 @@ const Input = ({ label, type, name, value, onChange, required }) => {
         value={value?.length ? value : ''}
         onChange={onChange}
         required={required}
+        disabled={disabled}
       />
       <label className="input-label">{label}</label>
     </div>

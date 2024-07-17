@@ -10,6 +10,7 @@
   transition: 0.1s;
   touch-action: cross-slide-x;
   text-align: center;
+  min-height: 33px;
 }
 
 .button:active:not(:disabled) {

@@ -211,3 +211,13 @@ export const editComment = createAsyncThunk("data/editComment", async (data, {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
+
+export const addLocation = createAsyncThunk("data/addLocation", async (data, {
+  rejectWithValue
+}) => {
+  try {
+    await axiosApi.post(`locations/`, data);
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});

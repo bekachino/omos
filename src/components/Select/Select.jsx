@@ -51,6 +51,7 @@ const Select = ({
               });
               inputRef.current.blur();
             }}
+            key={item.props?.value}
           >
             {item.props?.children}
           </div>

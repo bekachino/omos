@@ -133,8 +133,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={currentRegion}
         >
           {regions?.map((type) => (
-            <div className='select-option'
-              value={type?.key}>{type?.value}</div>
+            <div
+              className='select-option'
+              value={type?.key}
+              key={type?.key}
+            >{type?.value}</div>
           ) || [])}
         </Select>
         {currentRegion && <>
@@ -150,8 +153,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               style={{ flexGrow: 1 }}
             >
               {bitrixLocations?.map((type) => (
-                <div className='select-option'
-                  value={type?.name}>{type?.name}</div>
+                <div
+                  className='select-option'
+                  value={type?.name}
+                  key={type?.name}
+                >{type?.name}</div>
               ) || [])}
             </Select>
           </div>
@@ -160,6 +166,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               pickedLocations?.includes(location.name) && <span
                 className='picked-location'
                 onClick={() => onPickedBitrixLocationClick(location.name)}
+                key={location.name}
               >
               {location.name} &#10005;
             </span>
@@ -191,8 +198,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         >
           {workers.map((type) => (
-            <div className='select-option'
-              value={type?.value}>{type?.key}</div>
+            <div
+              className='select-option'
+              value={type?.value}
+              key={type?.value}
+            >{type?.key}</div>
           ))}
         </Select>
         <Select label='Причина'
@@ -204,8 +214,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         >
           {incident_types.map((type) => (
-            <div className='select-option'
-              value={type?.key}>{type?.value}</div>
+            <div
+              className='select-option'
+              value={type?.key}
+              key={type?.key}
+            >{type?.value}</div>
           ))}
         </Select>
         {state?.incident_type === 'maintenance' && <Input label='Длительность'
@@ -222,8 +235,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         >
           {work_types.map((type) => (
-            <div className='select-option'
-              value={type?.key}>{type?.value}</div>
+            <div
+              className='select-option'
+              value={type?.key}
+              key={type?.key}
+            >{type?.value}</div>
           ))}
         </Select>}
         <Select label='Тип локации'
@@ -234,8 +250,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         >
           {locationTypes.map((location) => (
-            <div className='select-option'
-              value={location?.key}>{location?.value}</div>
+            <div
+              className='select-option'
+              value={location?.key}
+              key={location?.key}
+            >{location?.value}</div>
           ))}
         </Select>
         {state?.post_type && <Select label='Локации для абонентского приложения'
@@ -244,8 +263,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           loading={locationsLoading}
         >
           {locations.map((type) => (
-            <div className='select-option'
-              value={type?.id}>{type?.name}</div>
+            <div
+              className='select-option'
+              value={type?.id}
+              key={type?.id}
+            >{type?.name}</div>
           ))}
         </Select>}
         <div className='picked-locations'>
@@ -253,6 +275,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             addresses?.includes(location.id) && <span
               className='picked-location'
               onClick={() => onPickedLocationClick(location.id)}
+              key={location.id}
             >
               {location.name} &#10005;
             </span>
@@ -283,6 +306,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               toggleModal();
               setState(null);
               setAddresses([]);
+              setCurrentRegion('');
             }}
           >
             Отмена
@@ -301,6 +325,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       <CreateLocationModal
         toggleModal={toggleCreateLocationModal}
         open={createLocationModalOpen}
+        regionName={currentRegion}
       />
     </div>
   );
