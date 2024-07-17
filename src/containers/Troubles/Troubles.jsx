@@ -23,16 +23,6 @@ const Troubles = () => {
   const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
   const [currentTrouble, setCurrentTrouble] = useState(null);
-  const [testState, setTestState] = useState(null);
-  
-  const handleTestChange = e => {
-    const { name, value } = e.target;
-    setTestState(prevState => (
-      {
-        ...prevState, [name]: value,
-      }
-    ));
-  };
   
   useEffect(() => {
     document.body.addEventListener('mousedown', () => {

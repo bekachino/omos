@@ -12,7 +12,7 @@ const Select = ({ name, value, label, onChange, loading, children }) => {
   }, [value]);
   
   useEffect(() => {
-    const toggle = e => {
+    const toggle = () => {
       setShowOptions(false);
     };
     
