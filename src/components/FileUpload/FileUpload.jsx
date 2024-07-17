@@ -46,7 +46,7 @@ const FileUpload = ({ handleFileChange, removeImage, file, label }) => {
           type='button'
           variant='success'
           onClick={activateInput}
-          style={{padding: '2px 5px'}}
+          style={{ padding: '2px 5px' }}
         >
           Загрузить
         </Button> : <Button
@@ -57,6 +57,7 @@ const FileUpload = ({ handleFileChange, removeImage, file, label }) => {
             if (removeImage && inputRef.current) {
               removeImage();
               inputRef.current.value = '';
+              inputRef.current.src = null;
             }
           }}
         >Удалить</Button>}
