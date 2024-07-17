@@ -26,7 +26,9 @@
   padding: 13px 10px;
 }
 
-.troubles-list td {
+.trouble-id {
+  color: #3768FD;
+  text-decoration: underline;
   cursor: pointer;
 }
 

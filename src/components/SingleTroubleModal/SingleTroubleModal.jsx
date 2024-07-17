@@ -12,10 +12,10 @@ import {
   getTrouble,
   getWorkStatuses
 } from "../../features/dataThunk";
-import EditableSelect from "../EditableSelect/EditableSelect";
 import TextArea from "../TextArea/TextArea";
 import Button from "../Button/Button";
 import { formatDate, formatDuration } from "../../constants";
+import Select from "../Select/Select";
 
 const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
   const dispatch = useAppDispatch();
@@ -31,8 +31,19 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     editSolutionLoading,
     editCommentLoading,
   } = useAppSelector(state => state.dataState);
+  const [state, setState] = useState(null);
   const [commentText, setCommentText] = useState('');
   const [solution, setSolution] = useState('');
+  
+  useEffect(() => {
+    setState((
+      {
+        work_status: trouble?.work_status,
+        side_accident: trouble?.side_accident,
+        cause: trouble?.cause,
+      }
+    ));
+  }, [trouble?.cause, trouble?.side_accident, trouble?.work_status]);
   
   useEffect(() => {
     if (troubleId && open) {
@@ -44,6 +55,16 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     }
   }, [dispatch, open, troubleId]);
   
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setState(prevState => (
+      {
+        ...prevState,
+        [name]: value,
+      }
+    ))
+  };
+  
   const onSolutionEdit = async (e) => {
     e?.preventDefault();
     await dispatch(editSolution({
@@ -52,26 +73,26 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     toggleModal();
   };
   
-  const onSideAccidentEdit = async (e, value) => {
-    e?.preventDefault();
+  const onSideAccidentEdit = async (e) => {
+    e.preventDefault();
     await dispatch(editSideAccident({
-      side_accident: value || '', id: trouble?.id,
+      side_accident: state?.side_accident || '', id: trouble?.id,
     }))
     toggleModal();
   };
   
-  const onWorkStatusEdit = async (e, value) => {
-    e?.preventDefault();
+  const onWorkStatusEdit = async (e) => {
+    e.preventDefault();
     await dispatch(editWorkStatus({
-      status: value || '', id: trouble?.id,
+      status: state?.work_status || '', id: trouble?.id,
     }))
     toggleModal();
   };
   
-  const onCauseEdit = async (e, value) => {
-    e?.preventDefault();
+  const onCauseEdit = async (e) => {
+    e.preventDefault();
     await dispatch(editCause({
-      cause: value || '', id: trouble?.id,
+      cause: state?.cause || '', id: trouble?.id,
     }))
     toggleModal();
   };
@@ -171,53 +192,58 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
             <tr>
               <td>Сторона аварии</td>
               <td>
-                <EditableSelect label='Сторона аварии'
-                  value={trouble?.side_accident}
-                  onSubmit={onSideAccidentEdit}
-                  open={open}
-                  required
-                >
-                  {sideAccidentStatuses.map(side => side?.value).map((type) => (
-                    <div className='select-option'
-                      value={type}>{type}</div>
-                  ))}
-                </EditableSelect>
+                <form onSubmit={onSideAccidentEdit}>
+                  <Select
+                    label='Сторона аварии'
+                    name='side_accident'
+                    value={state?.side_accident}
+                    onChange={handleChange}
+                    dontClearOnFocus={true}
+                    required
+                  >
+                    {sideAccidentStatuses.map(side => side?.value).map((type) => (
+                      <div value={type}>{type}</div>
+                    ))}
+                  </Select>
+                </form>
               </td>
             </tr>
             <tr>
               <td>Статус</td>
               <td>
-                <EditableSelect label='Статус'
-                  name='status'
-                  value={trouble?.work_status}
-                  onSubmit={onWorkStatusEdit}
-                  open={open}
-                  required
-                  isNotTypable
-                >
-                  {workStatuses.map((status) => (
-                    <div className='select-option'
-                      value={status?.value}>{status?.key}</div>
-                  ))}
-                </EditableSelect>
+                <form onSubmit={onWorkStatusEdit}>
+                  <Select
+                    label='Статус'
+                    name='work_status'
+                    value={state?.work_status}
+                    onChange={handleChange}
+                    dontClearOnFocus={true}
+                    required
+                  >
+                    {workStatuses.map((status) => (
+                      <div value={status?.value}>{status?.key}</div>
+                    ))}
+                  </Select>
+                </form>
               </td>
             </tr>
             <tr>
               <td>Причина</td>
               <td>
-                <EditableSelect label='Причина'
-                  name='cause'
-                  value={trouble?.cause}
-                  onSubmit={onCauseEdit}
-                  open={open}
-                  required
-                  isNotTypable
-                >
-                  {causes.map((status) => (
-                    <div className='select-option'
-                      value={status?.key}>{status?.value}</div>
-                  ))}
-                </EditableSelect>
+                <form onSubmit={onCauseEdit}>
+                  <Select
+                    label='Причина'
+                    name='cause'
+                    value={state?.cause}
+                    onChange={handleChange}
+                    dontClearOnFocus={true}
+                    required
+                  >
+                    {causes.map((status) => (
+                      <div value={status?.key}>{status?.value}</div>
+                    ))}
+                  </Select>
+                </form>
               </td>
             </tr>
             <tr>

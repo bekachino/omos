@@ -96,10 +96,8 @@ const Troubles = () => {
           </thead>
           <tbody>
           {troubles.map(trouble => (
-            <tr key={trouble?.id}
-              onClick={() => toggleSingleTroubleModal(trouble?.id)}
-            >
-              <td>{trouble?.id}</td>
+            <tr key={trouble?.id}>
+              <td className='trouble-id' onClick={() => toggleSingleTroubleModal(trouble?.id)}>{trouble?.id}</td>
               <td
                 className={trouble?.work_status === 'В процессе Омос' ? 'trouble-status-1' : trouble?.work_status === 'Работа у си' ? 'trouble-status-2' : trouble?.work_status === 'Завершено' ? 'trouble-status-3' : ''}
               >{trouble?.work_status}</td>

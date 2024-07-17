@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ОМОС / Аварии",
+  "name": "Просмотр и публикация аварий",
   "icons": [
     {
       "src": "main-logo.png",

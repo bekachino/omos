@@ -1,9 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Input from "../Input/Input";
 import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 import './select.css';
 
-const Select = ({ name, value, label, onChange, loading, children }) => {
+const Select = ({
+  name,
+  value,
+  label,
+  onChange,
+  loading,
+  dontClearOnFocus,
+  children
+}) => {
   const [showOptions, setShowOptions] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
   
@@ -36,11 +44,13 @@ const Select = ({ name, value, label, onChange, loading, children }) => {
         label={label}
         onFocus={() => {
           setShowOptions(true);
-          onChange({
-            target: {
-              name, value: '',
-            }
-          });
+          if (!dontClearOnFocus) {
+            onChange({
+              target: {
+                name, value: '',
+              }
+            });
+          }
           setShowOptions(true);
         }}
       />

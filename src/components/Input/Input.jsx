@@ -2,7 +2,7 @@ import React from 'react';
 import './input.css';
 
 const Input = ({
-  label, type, name, value, onChange, onFocus, onBlur, disabled, required
+  label, type, name, value, onChange, onFocus, onBlur, disabled, required,
 }) => {
   return (
     <div className='input-container'>
