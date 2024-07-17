@@ -13,11 +13,12 @@
 
 .input-label {
   position: absolute;
-  top: 11px;
+  top: 10px;
   left: 11px;
   color: #8F8F8F;
   pointer-events: none;
   transition: 0.2s;
+  border-radius: 3px;
 }
 
 .input:focus + .input-label,

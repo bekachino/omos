@@ -1,61 +1,78 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Input from "../Input/Input";
 import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 import './select.css';
 
-const Select = ({
-  label, type, name, onChange, required, loading, style, children
-}) => {
-  const inputRef = useRef(null);
-  const [currentValue, setCurrentValue] = useState('');
+const Select = ({ name, value, label, onChange, loading, children }) => {
+  const [showOptions, setShowOptions] = useState(false);
+  const [currentValue, setCurrentValue] = useState(value);
   
-  const onFocus = () => {
-    inputRef.current.focus();
-    setCurrentValue('');
-  };
+  useEffect(() => {
+    setCurrentValue(value);
+  }, [value]);
+  
+  useEffect(() => {
+    const toggle = e => {
+      setShowOptions(false);
+    };
+    
+    document.addEventListener('mousedown', toggle);
+    return () => document.removeEventListener('mousedown', toggle);
+  }, [showOptions]);
+  
+  const filteredItems = useCallback(() => {
+    return children?.filter(option => option.props?.children.toLowerCase().includes(currentValue?.toLowerCase()));
+  }, [children, currentValue]);
   
   return (
-    <div
-      className='select-container'
-      onClick={onFocus}
-      style={style}
-    >
-      <input type={type || 'text'}
-        className='select-input'
-        name={name}
+    <div className='select'>
+      <Input
+        type='text'
         value={currentValue}
-        placeholder={label}
-        ref={inputRef}
-        required={required}
-        autoComplete='off'
-        onChange={e => setCurrentValue(e.target.value)}
+        onChange={e => {
+          setShowOptions(true);
+          setCurrentValue(e.target.value);
+        }}
+        label={label}
+        onFocus={() => {
+          setShowOptions(true);
+          onChange({
+            target: {
+              name, value: '',
+            }
+          });
+          setShowOptions(true);
+        }}
       />
-      <div className='select-toggler'>
+      <div className={`select-toggler ${showOptions ? 'select-toggler-focused' : ''}`}>
         <div className='select-arrow'><SelectArrow/></div>
       </div>
-      <div className='select-options'>
-        {loading ? <div
-          className='select-option'
-        >
-          Загрузка...
-        </div> : children?.map((item) => (
-          item.props?.children?.toLowerCase().includes(currentValue?.toLowerCase()) &&
-          <div
-            className={item.props?.className}
-            value={item.props?.value}
-            onMouseDown={() => {
-              setCurrentValue(item.props?.children);
-              onChange({
-                target: {
-                  name: name || '', value: item.props?.value
-                }
-              });
-              inputRef.current.blur();
-            }}
-            key={item.props?.value}
-          >
-            {item.props?.children}
-          </div>
-        ))}
+      <div
+        className='select-items'
+        style={{ display: showOptions ? 'flex' : 'none' }}
+        onMouseDown={e => e.stopPropagation()}
+      >
+        {!loading ? filteredItems()?.length ? filteredItems()?.map((item) => (
+            item.props?.children?.toLowerCase().includes(currentValue?.toLowerCase() || '') &&
+            <div
+              className={'select-item ' + item.props?.className}
+              value={item.props?.value}
+              key={item.props?.value}
+              onClick={() => {
+                onChange({
+                  target: {
+                    name, value: item.props?.children,
+                  }
+                });
+                setShowOptions(false);
+              }}
+            >
+              {item.props?.children}
+            </div>
+          )) : <div className='select-item'
+            onClick={() => setShowOptions(false)}>Не найдено...</div> :
+          <div className='select-item'
+            onClick={() => setShowOptions(false)}>Загрузка...</div>}
       </div>
     </div>
   );

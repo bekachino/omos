@@ -134,7 +134,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         >
           {regions?.map((type) => (
             <div
-              className='select-option'
               value={type?.key}
               key={type?.key}
             >{type?.value}</div>
@@ -144,13 +143,13 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', }}>
             <Button variant='success'
               onClick={() => toggleCreateLocationModal(true)}
-              style={{ maxHeight: '30px', fontSize: '20px' }}
+              style={{ minWidth: '30px', height: '30px', minHeight: 'unset', fontSize: '20px' }}
             >+</Button>
-            <Select label='Битрикс локации'
+            <Select
+              label='Битрикс локации'
               name='locations'
               onChange={handleLocationsChange}
               loading={bitrixLocationsLoading}
-              style={{ flexGrow: 1 }}
             >
               {bitrixLocations?.map((type) => (
                 <div
@@ -189,7 +188,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={state?.port}
           onChange={handleChange}
         />
-        <Select label='Ответственный'
+        <Select
+          label='Ответственный'
           name='responsible'
           value={state?.responsible}
           options={workers}
@@ -205,7 +205,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{type?.key}</div>
           ))}
         </Select>
-        <Select label='Причина'
+        <Select
+          label='Причина'
           name='incident_type'
           value={state?.incident_type}
           options={incident_types}
@@ -242,7 +243,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{type?.value}</div>
           ))}
         </Select>}
-        <Select label='Тип локации'
+        <Select
+          label='Тип локации'
           name='post_type'
           value={state?.post_type}
           options={incident_types}

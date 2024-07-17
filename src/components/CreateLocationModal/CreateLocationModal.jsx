@@ -15,7 +15,7 @@ const CreateLocationModal = ({ open, toggleModal, regionName }) => {
   
   useEffect(() => {
     setState({
-      area: regionName,
+      area: regions.filter(region => region.value === regionName)[0]?.key,
     });
   }, [regionName]);
   
@@ -56,7 +56,7 @@ const CreateLocationModal = ({ open, toggleModal, regionName }) => {
           />
           <Input
             label='Регион'
-            value={regions.filter(region => region.key === regionName)[0]?.value}
+            value={regionName}
             required
             disabled
           />

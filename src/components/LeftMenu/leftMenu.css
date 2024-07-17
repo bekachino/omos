@@ -6,6 +6,7 @@
   width: 230px;
   background-color: #36495E;
   padding: 10px 10px 10px 0;
+  z-index: 100;
 }
 
 .left-menu-tabs {

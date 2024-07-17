@@ -17,3 +17,8 @@ body {
 h1 {
   text-align: center;
 }
+
+body:has(.create-trouble-form-container[open]),
+body:has(.single-trouble-modal-container[open]) {
+  overflow: hidden;
+}
