@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, } from 'react';
 import Input from "../Input/Input";
 import { ReactComponent as SelectArrow } from "../../assets/select-arrow.svg";
 import './select.css';
@@ -10,8 +10,10 @@ const Select = ({
   onChange,
   loading,
   dontClearOnFocus,
+  manualEditable,
   children
 }) => {
+  const inputRef = useRef(null);
   const [showOptions, setShowOptions] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
   
@@ -29,7 +31,10 @@ const Select = ({
   }, [showOptions]);
   
   const filteredItems = useCallback(() => {
-    return children?.filter(option => option.props?.children.toLowerCase().includes(currentValue?.toLowerCase()));
+    if (currentValue?.length) {
+      return children?.filter(option => option.props?.children.toLowerCase().includes(currentValue?.toLowerCase()));
+    }
+    return children;
   }, [children, currentValue]);
   
   return (
@@ -39,7 +44,13 @@ const Select = ({
         value={currentValue}
         onChange={e => {
           setShowOptions(true);
-          setCurrentValue(e.target.value);
+          if (manualEditable) {
+            onChange({
+              target: {
+                name, value: e.target.value,
+              }
+            });
+          } else setCurrentValue(e.target.value);
         }}
         label={label}
         onFocus={() => {
@@ -53,6 +64,7 @@ const Select = ({
           }
           setShowOptions(true);
         }}
+        ref={inputRef}
       />
       <div className={`select-toggler ${showOptions ? 'select-toggler-focused' : ''}`}>
         <div className='select-arrow'><SelectArrow/></div>
@@ -63,7 +75,6 @@ const Select = ({
         onMouseDown={e => e.stopPropagation()}
       >
         {!loading ? filteredItems()?.length ? filteredItems()?.map((item) => (
-            item.props?.children?.toLowerCase().includes(currentValue?.toLowerCase() || '') &&
             <div
               className={'select-item ' + item.props?.className}
               value={item.props?.value}
@@ -71,18 +82,19 @@ const Select = ({
               onClick={() => {
                 onChange({
                   target: {
-                    name, value: item.props?.children,
+                    name, value: item.props?.value,
                   }
                 });
+                if (item.props?.onClick) item.props?.onClick(null, item.props?.value);
                 setShowOptions(false);
               }}
             >
               {item.props?.children}
             </div>
           )) : <div className='select-item'
-            onClick={() => setShowOptions(false)}>Не найдено...</div> :
+            onClick={() => setShowOptions(false)}><em>Не найдено...</em></div> :
           <div className='select-item'
-            onClick={() => setShowOptions(false)}>Загрузка...</div>}
+            onClick={() => setShowOptions(false)}><em>Загрузка...</em></div>}
       </div>
     </div>
   );

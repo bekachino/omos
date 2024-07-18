@@ -15,7 +15,7 @@ const CreateLocationModal = ({ open, toggleModal, regionName }) => {
   
   useEffect(() => {
     setState({
-      area: regions.filter(region => region.value === regionName)[0]?.key,
+      area: regionName,
     });
   }, [regionName]);
   
@@ -30,7 +30,10 @@ const CreateLocationModal = ({ open, toggleModal, regionName }) => {
     e?.preventDefault();
     await dispatch(addLocation(state));
     await dispatch(getBitrixLocations(regionName));
-    setState(null);
+    setState(prevState => ({
+      ...prevState,
+      name: '',
+    }));
     toggleModal(false);
   };
   
@@ -56,7 +59,7 @@ const CreateLocationModal = ({ open, toggleModal, regionName }) => {
           />
           <Input
             label='Регион'
-            value={regionName}
+            value={regions.filter(region => region.key === regionName)[0]?.value}
             required
             disabled
           />

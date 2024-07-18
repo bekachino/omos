@@ -59,12 +59,14 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   });
   
   const handleLocationsChange = e => {
+    if (!e.target.value) return;
     if (!pickedLocations.includes(e.target.value)) {
       setPickedLocations([...pickedLocations, e.target.value]);
     }
   };
   
   const handleAddressesChange = e => {
+    if (typeof e.target.value === 'string') return;
     if (!addresses.includes(e.target.value)) {
       setAddresses([...addresses, e.target.value]);
     }
@@ -130,12 +132,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         />
         <Select label='Выберите область'
           onChange={handleCurrentRegionChange}
-          value={currentRegion}
+          value={regions.filter(region => region.key === currentRegion)[0]?.value}
         >
-          {regions?.map((type) => (
+          {regions?.map((type, i) => (
             <div
               value={type?.key}
-              key={type?.key}
+              key={i}
             >{type?.value}</div>
           ) || [])}
         </Select>
@@ -143,7 +145,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', }}>
             <Button variant='success'
               onClick={() => toggleCreateLocationModal(true)}
-              style={{ minWidth: '30px', height: '30px', minHeight: 'unset', fontSize: '20px' }}
+              style={{
+                minWidth: '30px',
+                height: '30px',
+                minHeight: 'unset',
+                fontSize: '20px'
+              }}
             >+</Button>
             <Select
               label='Битрикс локации'
@@ -151,11 +158,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               onChange={handleLocationsChange}
               loading={bitrixLocationsLoading}
             >
-              {bitrixLocations?.map((type) => (
+              {bitrixLocations?.map((type, i) => (
                 <div
                   className='select-option'
                   value={type?.name}
-                  key={type?.name}
+                  key={i}
                 >{type?.name}</div>
               ) || [])}
             </Select>
@@ -173,6 +180,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           </div>
         </>}
         <Input label='Кол-во абонентов'
+          type='number'
           name='subscriber_count'
           value={state?.subscriber_count}
           onChange={handleChange}
@@ -191,7 +199,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <Select
           label='Ответственный'
           name='responsible'
-          value={state?.responsible}
+          value={workers?.filter(worker => worker.value === state?.responsible)[0]?.key}
           options={workers}
           onChange={handleChange}
           loading={workersLoading}
@@ -208,8 +216,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <Select
           label='Причина'
           name='incident_type'
-          value={state?.incident_type}
-          options={incident_types}
+          value={incident_types?.filter(worker => worker.key === state?.incident_type)[0]?.value}
           onChange={handleChange}
           loading={incidentTypesLoading}
           required
@@ -230,7 +237,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         />}
         {state?.incident_type === 'maintenance' && <Select label='Тип работы'
           name='work_type'
-          value={state?.work_type}
+          value={work_types?.filter(worker => worker.key === state?.work_type)[0]?.value}
           options={work_types}
           onChange={handleChange}
           required
@@ -246,7 +253,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <Select
           label='Тип локации'
           name='post_type'
-          value={state?.post_type}
+          value={locationTypes?.filter(worker => worker.key === state?.post_type)[0]?.value}
           options={incident_types}
           onChange={handleChange}
           required

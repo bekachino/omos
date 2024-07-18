@@ -27,6 +27,7 @@
 }
 
 .trouble-id {
+  min-width: 100px;
   color: #3768FD;
   text-decoration: underline;
   cursor: pointer;

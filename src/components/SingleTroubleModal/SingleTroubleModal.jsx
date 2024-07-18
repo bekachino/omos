@@ -59,8 +59,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     const { name, value } = e.target;
     setState(prevState => (
       {
-        ...prevState,
-        [name]: value,
+        ...prevState, [name]: value,
       }
     ))
   };
@@ -73,26 +72,27 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
     toggleModal();
   };
   
-  const onSideAccidentEdit = async (e) => {
-    e.preventDefault();
+  const onSideAccidentEdit = async (e, value) => {
+    e?.preventDefault();
     await dispatch(editSideAccident({
-      side_accident: state?.side_accident || '', id: trouble?.id,
-    }))
+      side_accident: value ? value : state?.side_accident || '',
+      id: trouble?.id,
+    }));
     toggleModal();
   };
   
-  const onWorkStatusEdit = async (e) => {
-    e.preventDefault();
+  const onWorkStatusEdit = async (e, value) => {
+    e?.preventDefault();
     await dispatch(editWorkStatus({
-      status: state?.work_status || '', id: trouble?.id,
+      status: value ? value : state?.work_status || '', id: trouble?.id,
     }))
     toggleModal();
   };
   
-  const onCauseEdit = async (e) => {
-    e.preventDefault();
+  const onCauseEdit = async (e, value) => {
+    e?.preventDefault();
     await dispatch(editCause({
-      cause: state?.cause || '', id: trouble?.id,
+      cause: value ? value : state?.cause || '', id: trouble?.id,
     }))
     toggleModal();
   };
@@ -199,10 +199,12 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     value={state?.side_accident}
                     onChange={handleChange}
                     dontClearOnFocus={true}
+                    manualEditable
                     required
                   >
                     {sideAccidentStatuses.map(side => side?.value).map((type) => (
-                      <div value={type}>{type}</div>
+                      <div value={type}
+                        onClick={onSideAccidentEdit}>{type}</div>
                     ))}
                   </Select>
                 </form>
@@ -221,7 +223,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     required
                   >
                     {workStatuses.map((status) => (
-                      <div value={status?.value}>{status?.key}</div>
+                      <div value={status?.value} onClick={onWorkStatusEdit}>{status?.key}</div>
                     ))}
                   </Select>
                 </form>
@@ -240,7 +242,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     required
                   >
                     {causes.map((status) => (
-                      <div value={status?.key}>{status?.value}</div>
+                      <div value={status?.key} onClick={onCauseEdit}>{status?.value}</div>
                     ))}
                   </Select>
                 </form>
