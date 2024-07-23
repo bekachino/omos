@@ -1,9 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './fileUpload.css';
 import Button from "../Button/Button";
 
 const FileUpload = ({ handleFileChange, removeImage, file, label }) => {
   const inputRef = useRef(null);
+  
+  useEffect(() => {
+    if (!file) {
+      inputRef.current.value = '';
+      inputRef.current.src = null;
+    }
+  }, [file]);
   
   const onFileChange = (e) => {
     if (handleFileChange) {

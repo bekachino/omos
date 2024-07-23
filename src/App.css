@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+* {
+  overscroll-behavior: contain;
+}
+
 html {
   min-width: 1440px;
 }
