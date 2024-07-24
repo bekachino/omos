@@ -1,3 +1,9 @@
+:root {
+  --primary: #345976;
+  --surface: #FFFFFF;
+  --hard: #8F8F8F;
+}
+
 *, ::before {
   box-sizing: border-box;
 }

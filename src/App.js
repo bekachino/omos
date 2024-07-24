@@ -1,7 +1,11 @@
-import './App.css';
 import { Navigate, Route, Routes } from "react-router-dom";
 import LeftMenu from "./components/LeftMenu/LeftMenu";
 import Troubles from "./containers/Troubles/Troubles";
+import moment from "moment/moment";
+import 'moment/locale/ru';
+import './App.css';
+
+moment.locale('ru');
 
 const App = () => {
   return (

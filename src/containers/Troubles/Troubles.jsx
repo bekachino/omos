@@ -8,11 +8,13 @@ import { formatDate, formatDuration } from "../../constants";
 import CreateTroubleForm
   from "../../components/CreateTroubleForm/CreateTroubleForm";
 import Button from "../../components/Button/Button";
-import './troubles.css';
 import { resetAlertMessage } from "../../features/dataSlice";
 import Alert from "../../components/Alert/Alert";
 import SingleTroubleModal
   from "../../components/SingleTroubleModal/SingleTroubleModal";
+import TroublesToExcelModal
+  from "../../components/TroublesToExcelModal/TroublesToExcelModal";
+import './troubles.css';
 
 const Troubles = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +24,7 @@ const Troubles = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
+  const [troublesToExcelModalOpen, setTroublesToExcelModalOpen] = useState(false);
   const [currentTrouble, setCurrentTrouble] = useState(null);
   
   useEffect(() => {
@@ -56,6 +59,10 @@ const Troubles = () => {
     setCreateTroubleModalOpen(!createTroubleModalOpen);
   }
   
+  const toggleTroublesToExcelModal = () => {
+    setTroublesToExcelModalOpen(!troublesToExcelModalOpen);
+  }
+  
   const toggleSingleTroubleModal = (id) => {
     setSingleTroubleModalOpen(!singleTroubleModalOpen);
     if (id) setCurrentTrouble(id);
@@ -72,8 +79,15 @@ const Troubles = () => {
             variant={successMessage ? 'success' : errorMessage ? 'error' : 'default'}
           />
           <Button variant='success'
-            onClick={toggleCreateTroubleModal}
+            onClick={toggleTroublesToExcelModal}
             style={{ padding: '18px 75px 14px', marginLeft: 'auto' }}
+          >
+            <PostNewTrouble/>
+            Выгрузить аварии в excel
+          </Button>
+          <Button variant='success'
+            onClick={toggleCreateTroubleModal}
+            style={{ padding: '18px 75px 14px', marginLeft: '20px' }}
           >
             <PostNewTrouble/>
             Добавить новость
@@ -97,7 +111,8 @@ const Troubles = () => {
           <tbody>
           {troubles.map(trouble => (
             <tr key={trouble?.id}>
-              <td className='trouble-id' onClick={() => toggleSingleTroubleModal(trouble?.id)}>{trouble?.id}</td>
+              <td className='trouble-id'
+                onClick={() => toggleSingleTroubleModal(trouble?.id)}>{trouble?.id}</td>
               <td
                 className={trouble?.work_status === 'В процессе Омос' ? 'trouble-status-1' : trouble?.work_status === 'Работа у си' ? 'trouble-status-2' : trouble?.work_status === 'Завершено' ? 'trouble-status-3' : ''}
               >{trouble?.work_status}</td>
@@ -166,6 +181,10 @@ const Troubles = () => {
         open={singleTroubleModalOpen}
         toggleModal={toggleSingleTroubleModal}
         troubleId={currentTrouble}
+      />
+      <TroublesToExcelModal
+        open={troublesToExcelModalOpen}
+        toggleModal={toggleTroublesToExcelModal}
       />
     </div>
   );

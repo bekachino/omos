@@ -1,0 +1,86 @@
+.single-trouble-modal-container {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition-property: display opacity;
+  transition-duration: 0.2s;
+  transition-behavior: allow-discrete;
+  backdrop-filter: blur(3px);
+}
+
+.single-trouble-modal-container[open] {
+  display: flex;
+  opacity: 1;
+  
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.single-trouble-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #238854;
+  border-radius: 5px;
+  padding: 20px 35px;
+  width: unset;
+  background-color: #FFFFFF;
+  min-height: unset;
+  max-height: unset;
+  overflow-y: scroll;
+}
+
+.single-trouble-modal h3 {
+  margin: 0;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.trouble-modal-loading {
+  display: flex;
+  width: 100%;
+  height: 300px;
+}
+
+.trouble-modal-loading::before {
+  content: '';
+  width: 50px;
+  height: 50px;
+  border: 4px solid #172b3c;
+  border-radius: 50%;
+  border-bottom: 4px solid transparent;
+  margin: auto;
+  animation: 0.8s spin linear infinite;
+}
+
+.single-trouble-modal-container td {
+  padding-bottom: 10px;
+}
+
+.single-trouble-modal-container td:last-child {
+  padding-left: 10px;
+}
+
+@keyframes spin {
+  from {transform: rotate(0)}
+  to {transform: rotate(360deg)}
+}
+
+.trouble-value-outlined {
+  display: flex;
+}
+
+.trouble-value-outlined span {
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid #BFBFBF;
+  flex-grow: 1;
+}
