@@ -76,6 +76,14 @@
   background-color: #ededed;
 }
 
+.select-items:has(.select-item.highlighted) .select-item:hover {
+  background-color: unset;
+}
+
+.select-item.highlighted {
+  background-color: #ededed!important;
+}
+
 .select .input-label {
   top: 9px;
   transition-delay: .12s;
