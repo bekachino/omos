@@ -11,6 +11,7 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
     periodDate1: moment().subtract(7, 'days').format('DD.MM.YYYY'),
     periodDate2: moment().subtract(1, 'days').format('DD.MM.YYYY'),
   });
+  const [troublesLoading, setTroublesLoading] = useState(false);
   
   const changeHandler = (value) => {
     if (!state.periodDate1) {
@@ -44,11 +45,13 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
   
   const onSubmit = async () => {
     try {
+      setTroublesLoading(true);
       const date1 = moment(state?.periodDate1, 'DD.MM.YYYY').format('YYYY-MM-DD');
       const date2 = moment(state?.periodDate2, 'DD.MM.YYYY').format('YYYY-MM-DD');
       
       const req = await axiosApi(`incident_list/?start_date=${date1}T00:00:00&end_date=${date2}}T23:59:59`);
       const res = await req.data.results;
+      setTroublesLoading(false);
       if (res.length) {
         await handleExcelFileExport(res);
         toggleModal();
@@ -72,7 +75,9 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
         });
       });
       
-      return columnWidths.map(width => ({ wch: width + 2 }));
+      return columnWidths.map(width => (
+        { wch: width + 2 }
+      ));
     };
     
     worksheet['!cols'] = calculateColumnWidths(data);
@@ -103,7 +108,7 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
             style={{
               padding: '4px 8px', width: '100%'
             }}
-            loading={false}
+            loading={troublesLoading}
             disabled={!state?.periodDate1 || !state?.periodDate2}
             onClick={onSubmit}
           >Выгрузить</Button>
