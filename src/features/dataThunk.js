@@ -221,3 +221,13 @@ export const addLocation = createAsyncThunk("data/addLocation", async (data, {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
+
+export const deleteTrouble = createAsyncThunk("data/deleteTrouble", async (troubleId, {
+  rejectWithValue
+}) => {
+  try {
+    await axiosApi.delete(`incidents/${troubleId}/delete/`);
+  } catch (e) {
+    return rejectWithValue(e.response.status === 500 ? smthIsWrongErrorMessage : 'Ошибка при удалении аварии, попробуйте позже');
+  }
+});

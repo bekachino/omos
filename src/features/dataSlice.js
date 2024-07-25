@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  addLocation,
+  addLocation, deleteTrouble,
   editCause,
   editComment,
   editSideAccident,
@@ -44,6 +44,7 @@ const initialState = {
   getCausesLoading: false,
   getWorkersLoading: false,
   addLocationLoading: false,
+  deleteTroubleLoading: false,
   successMessage: '',
   errorMessage: '',
   troublesTabs: [],
@@ -262,6 +263,18 @@ const DataSlice = createSlice({
     });
     builder.addCase(addLocation.rejected, (state, { payload: res }) => {
       state.addLocationLoading = false;
+      state.errorMessage = res;
+    });
+    
+    builder.addCase(deleteTrouble.pending, (state) => {
+      state.deleteTroubleLoading = true;
+    });
+    builder.addCase(deleteTrouble.fulfilled, (state) => {
+      state.deleteTroubleLoading = false;
+      state.successMessage = 'Авария успешно удалена';
+    });
+    builder.addCase(deleteTrouble.rejected, (state, { payload: res }) => {
+      state.deleteTroubleLoading = false;
       state.errorMessage = res;
     });
   },

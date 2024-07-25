@@ -3,7 +3,7 @@ import {
   ReactComponent as PostNewTrouble
 } from "../../assets/post-new-trouble.svg";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getTroubles } from "../../features/dataThunk";
+import { deleteTrouble, getTroubles } from "../../features/dataThunk";
 import { formatDate, formatDuration } from "../../constants";
 import CreateTroubleForm
   from "../../components/CreateTroubleForm/CreateTroubleForm";
@@ -19,19 +19,24 @@ import './troubles.css';
 const Troubles = () => {
   const dispatch = useAppDispatch();
   const {
-    troubles, page_size, troublesTabs, successMessage, errorMessage,
+    troubles, page_size, troublesTabs, successMessage, errorMessage, deleteTroubleLoading,
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
   const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
   const [createTroubleModalOpen, setCreateTroubleModalOpen] = useState(false);
   const [troublesToExcelModalOpen, setTroublesToExcelModalOpen] = useState(false);
   const [currentTrouble, setCurrentTrouble] = useState(null);
+  const [currentTooltip, setCurrentTooltip] = useState(null);
   
   useEffect(() => {
     document.body.addEventListener('mousedown', () => {
       dispatch(resetAlertMessage());
     });
   }, [dispatch]);
+  
+  useEffect(() => {
+    document.body.addEventListener('click', () => setCurrentTooltip(null));
+  }, []);
   
   useEffect(() => {
     dispatch(getTroubles({ currentTab, page_size }));
@@ -66,6 +71,14 @@ const Troubles = () => {
   const toggleSingleTroubleModal = (id) => {
     setSingleTroubleModalOpen(!singleTroubleModalOpen);
     if (id) setCurrentTrouble(id);
+  };
+  
+  const onTroubleDelete = async () => {
+    if (currentTooltip) {
+      await dispatch(deleteTrouble(currentTooltip));
+      dispatch(getTroubles({ currentTab, page_size }));
+      setCurrentTooltip(null);
+    }
   };
   
   return (
@@ -106,6 +119,7 @@ const Troubles = () => {
             <th>Сторона аварии (Элкат/Скайнет)</th>
             <th>Решение</th>
             <th>Причина</th>
+            <th></th>
           </tr>
           </thead>
           <tbody>
@@ -124,6 +138,29 @@ const Troubles = () => {
               <td>{trouble?.side_accident}</td>
               <td>{trouble?.solution}</td>
               <td>{trouble?.cause}</td>
+              <td
+                className={`trouble-tooltip-toggler ${currentTooltip === trouble?.id ? 'focused' : ''}`}
+                onClick={e => {
+                  e.stopPropagation();
+                  setCurrentTooltip(trouble?.id);
+                }}
+              >
+                {currentTooltip === trouble?.id &&
+                  <div className='trouble-tooltip-options'>
+                    <Button
+                      variant='error'
+                      style={{
+                        width: '100%',
+                        fontWeight: 600,
+                        border: 0,
+                        justifyContent: 'flex-start',
+                        minHeight: '25px'
+                      }}
+                      loading={deleteTroubleLoading}
+                      onClick={onTroubleDelete}
+                    >Удалить</Button>
+                  </div>}
+              </td>
             </tr>
           ))}
           </tbody>

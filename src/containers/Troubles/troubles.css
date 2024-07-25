@@ -107,3 +107,30 @@
 .trouble-status-3 {
   color: #1DBF12;
 }
+
+.trouble-tooltip-toggler {
+  position: relative;
+  min-height: 63px;
+  min-width: 63px;
+  background-image: url("../../assets/tooltip-icon.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.trouble-tooltip-toggler.focused {
+  background-color: #F3F2F1;
+}
+
+.trouble-tooltip-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: 140px;
+  border: 1px solid #BFBFBF;
+  border-radius: 5px;
+  background-color: #FFFFFF;
+  padding: 4px;
+  z-index: 1;
+}
