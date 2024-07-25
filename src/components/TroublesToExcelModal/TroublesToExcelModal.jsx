@@ -96,23 +96,21 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
       <div className='single-trouble-modal'
         onClick={e => e.stopPropagation()}
       >
-        {!false ? <>
-          <h3>Выгрузить список аварий в Excel файл</h3>
-          <DatePicker
-            changeHandler={changeHandler}
-            date1={state?.periodDate1}
-            date2={state?.periodDate2}
-          />
-          <Button
-            variant='success'
-            style={{
-              padding: '4px 8px', width: '100%'
-            }}
-            loading={troublesLoading}
-            disabled={!state?.periodDate1 || !state?.periodDate2}
-            onClick={onSubmit}
-          >Выгрузить</Button>
-        </> : <div className='trouble-modal-loading'/>}
+        <h3>Выгрузить список аварий в Excel файл</h3>
+        <DatePicker
+          changeHandler={changeHandler}
+          date1={state?.periodDate1}
+          date2={state?.periodDate2}
+        />
+        <Button
+          variant='success'
+          style={{
+            padding: '4px 8px', width: '100%'
+          }}
+          loading={troublesLoading}
+          disabled={!state?.periodDate1 || !state?.periodDate2}
+          onClick={onSubmit}
+        >Выгрузить</Button>
       </div>
     </div>
   );
