@@ -120,7 +120,7 @@ const DatePicker = ({ date1, date2, changeHandler }) => {
             )()}`}
             key={i}
             onClick={() => {
-              if (day.isBefore(moment()) && !day.isSame(moment(), 'day')) changeHandler(day.format('DD.MM.YYYY'));
+              if (day.isBefore(moment())) changeHandler(day.format('DD.MM.YYYY'));
             }}
           >
             <div className='month-day-inner'>{day.format('D')}</div>
@@ -128,6 +128,7 @@ const DatePicker = ({ date1, date2, changeHandler }) => {
           </div>
         ))}
       </div>
+      <div className='date-preview'>{date1} - {date2}</div>
     </div>
   );
 };

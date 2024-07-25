@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import DatePicker from "../DatePicker/DatePicker";
 import moment from "moment";
+import * as XLSX from 'xlsx';
 import './troublesToExcelModal.css';
 import Button from "../Button/Button";
+import axiosApi from "../../axiosApi";
+import { formatDate } from "../../constants";
 
 const TroublesToExcelModal = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
@@ -43,6 +46,30 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
     }
   };
   
+  const onSubmit = async () => {
+    try {
+      const date1 = moment(state?.periodDate1, 'DD.MM.YYYY').format('YYYY-MM-DD');
+      const date2 = moment(state?.periodDate2, 'DD.MM.YYYY').format('YYYY-MM-DD');
+      
+      const req = await axiosApi(`incident_list/?start_date=${date1}T00:00:00&end_date=${date2}}T23:59:59`);
+      const res = await req.data.results;
+      if (res.length) {
+        await handleExcelFileExport(res);
+        toggleModal();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+  const handleExcelFileExport = (data) => {
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Аварии');
+    
+    XLSX.writeFile(workbook, `Аварии ${state?.periodDate1} - ${state?.periodDate2}.xlsx`);
+  };
+  
   return (
     <div
       className='single-trouble-modal-container'
@@ -65,6 +92,8 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
               padding: '4px 8px', width: '100%'
             }}
             loading={false}
+            disabled={!state?.periodDate1 || !state?.periodDate2}
+            onClick={onSubmit}
           >Выгрузить</Button>
         </> : <div className='trouble-modal-loading'/>}
       </div>

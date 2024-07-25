@@ -83,3 +83,18 @@
 .month-day-not-current-month .month-day-inner {
   color: var(--hard);
 }
+
+.date-preview {
+  padding: 6px 20px 6px 48px;
+  box-shadow: 0 3px 8px 0 #0000001A;
+  border-radius: 7px;
+  color: #345976;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 10px auto 0;
+  width: fit-content;
+  background-image: url("../../assets/calendar.svg");
+  background-repeat: no-repeat;
+  background-size: 18px;
+  background-position: 17px center;
+}
