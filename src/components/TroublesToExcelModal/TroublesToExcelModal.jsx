@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import DatePicker from "../DatePicker/DatePicker";
 import moment from "moment";
 import * as XLSX from 'xlsx';
 import './troublesToExcelModal.css';
 import Button from "../Button/Button";
 import axiosApi from "../../axiosApi";
-import { formatDate } from "../../constants";
 
 const TroublesToExcelModal = ({ open, toggleModal }) => {
-  const dispatch = useAppDispatch();
-  const {} = useAppSelector(state => state.dataState);
   const [state, setState] = useState({
     periodDate1: moment().subtract(7, 'days').format('DD.MM.YYYY'),
     periodDate2: moment().subtract(1, 'days').format('DD.MM.YYYY'),
@@ -65,10 +61,26 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
   const handleExcelFileExport = (data) => {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Аварии');
     
+    const calculateColumnWidths = (data) => {
+      const columnWidths = [];
+      
+      data.forEach(row => {
+        Object.keys(row).forEach((key, colIndex) => {
+          const value = row[key]?.toString() || '';
+          columnWidths[colIndex] = Math.max(columnWidths[colIndex] || 10, value.length);
+        });
+      });
+      
+      return columnWidths.map(width => ({ wch: width + 2 }));
+    };
+    
+    worksheet['!cols'] = calculateColumnWidths(data);
+    
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Аварии');
     XLSX.writeFile(workbook, `Аварии ${state?.periodDate1} - ${state?.periodDate2}.xlsx`);
   };
+  
   
   return (
     <div
