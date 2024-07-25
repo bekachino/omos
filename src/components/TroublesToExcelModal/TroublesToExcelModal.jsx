@@ -49,7 +49,7 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
       const date1 = moment(state?.periodDate1, 'DD.MM.YYYY').format('YYYY-MM-DD');
       const date2 = moment(state?.periodDate2, 'DD.MM.YYYY').format('YYYY-MM-DD');
       
-      const req = await axiosApi(`incident_list/?start_date=${date1}T00:00:00&end_date=${date2}}T23:59:59`);
+      const req = await axiosApi(`incident_list/?start_date=${date1}T00:00:00&end_date=${date2}T23:59:59`);
       const res = await req.data.results;
       setTroublesLoading(false);
       if (res.length) {
