@@ -198,7 +198,6 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     name='side_accident'
                     value={state?.side_accident}
                     onChange={handleChange}
-                    dontClearOnFocus={true}
                     manualEditable
                     required
                   >
@@ -219,7 +218,6 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     name='work_status'
                     value={state?.work_status}
                     onChange={handleChange}
-                    dontClearOnFocus={true}
                     required
                   >
                     {workStatuses.map((status) => (
@@ -238,7 +236,6 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
                     name='cause'
                     value={state?.cause}
                     onChange={handleChange}
-                    dontClearOnFocus={true}
                     required
                   >
                     {causes.map((status) => (
