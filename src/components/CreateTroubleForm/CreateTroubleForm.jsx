@@ -1,51 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import './createTroubleForm.css';
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getBitrixLocations,
+  getCities,
+  getDistricts, getHouses,
   getIncidentTypes,
   getLocations,
+  getRegions,
+  getStreets,
   getWorkers,
   getWorkTypes,
   postTrouble
 } from "../../features/dataThunk";
-import { locationTypes, regions } from "../../constants";
+import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
-import CreateLocationModal from "../CreateLocationModal/CreateLocationModal";
+import './createTroubleForm.css';
 
 const CreateTroubleForm = ({ open, toggleModal }) => {
   const dispatch = useAppDispatch();
   const {
+    regions,
+    regionsLoading,
+    cities,
+    citiesLoading,
+    districts,
+    districtsLoading,
+    streets,
+    houses,
+    housesLoading,
+    streetsLoading,
     incident_types,
     incidentTypesLoading,
     work_types,
     locations,
     locationsLoading,
-    bitrixLocations,
-    bitrixLocationsLoading,
     workers,
     workersLoading,
     createTroubleLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
-  const [pickedLocations, setPickedLocations] = useState([]);
-  const [currentRegion, setCurrentRegion] = useState('');
-  const [createLocationModalOpen, setCreateLocationModalOpen] = useState(false);
   
   useEffect(() => {
+    dispatch(getRegions());
     dispatch(getIncidentTypes());
     dispatch(getWorkTypes());
     dispatch(getWorkers());
   }, [dispatch]);
-  
-  useEffect(() => {
-    dispatch(getBitrixLocations(currentRegion));
-  }, [currentRegion, dispatch]);
   
   useEffect(() => {
     if (state?.post_type) {
@@ -54,15 +58,56 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     }
   }, [dispatch, state?.post_type]);
   
-  const handleChange = e => setState({
-    ...state, [e.target.name]: e.target.value
-  });
-  
-  const handleLocationsChange = e => {
-    if (!e.target.value) return;
-    if (!pickedLocations.includes(e.target.value)) {
-      setPickedLocations([...pickedLocations, e.target.value]);
+  const handleChange = e => setState(prevState => (
+    {
+      ...prevState, [e.target.name]: e.target.value,
     }
+  ));
+  
+  const handleAddressChange = e => {
+    const { name, value } = e.target;
+    let finalValue = '';
+    
+    if (name === 'region') {
+      finalValue = regions.filter(region => region?.hydra_id === value)[0];
+      if (value) {
+        dispatch(getCities(value));
+      } else return setState(prevState => (
+        { ...prevState, region: null, city: null, district: null, street: null }
+      ));
+    } else if (name === 'city') {
+      finalValue = cities.filter(city => city?.hydra_id === value)[0];
+      if (value) {
+        dispatch(getDistricts(value));
+      } else return setState(prevState => (
+        { ...prevState, city: null, district: null, street: null }
+      ));
+    } else if (name === 'district') {
+      finalValue = districts.filter(district => district?.hydra_id === value)[0];
+      if (value) {
+        dispatch(getStreets(value));
+      } else return setState(prevState => (
+        { ...prevState, district: null, street: null }
+      ));
+    } else if (name === 'street') {
+      finalValue = streets.filter(street => street?.hydra_id === value)[0];
+      if (value) {
+        dispatch(getHouses(value));
+      } else return setState(prevState => (
+        { ...prevState, street: null }
+      ));
+    } else if (name === 'house') {
+      finalValue = houses.filter(street => street?.hydra_id === value)[0];
+      if (!value) return setState(prevState => (
+        { ...prevState, house: null, }
+      ));
+    }
+    
+    setState(prevState => (
+      {
+        ...prevState, [name]: finalValue,
+      }
+    ));
   };
   
   const handleAddressesChange = e => {
@@ -70,11 +115,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     if (!addresses.includes(e.target.value)) {
       setAddresses([...addresses, e.target.value]);
     }
-  };
-  
-  const handleCurrentRegionChange = e => {
-    setCurrentRegion(e.target.value);
-    setPickedLocations([]);
   };
   
   const handleFileChange = (e) => {
@@ -93,22 +133,15 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     ));
   };
   
-  const toggleCreateLocationModal = (value) => setCreateLocationModalOpen(value);
-  
   const onPickedLocationClick = (locationId) => {
     const filteredAddresses = addresses.filter(address => address !== locationId);
     setAddresses(filteredAddresses);
   };
   
-  const onPickedBitrixLocationClick = (locationName) => {
-    const filteredAddresses = pickedLocations.filter(location => location !== locationName);
-    setPickedLocations(filteredAddresses);
-  };
-  
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      addresses, ...state, locations: pickedLocations,
+      addresses, ...state,
     }));
     toggleModal();
     setState(null);
@@ -131,54 +164,83 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           required
         />
         <Select label='Выберите область'
-          onChange={handleCurrentRegionChange}
-          value={regions.filter(region => region.key === currentRegion)[0]?.value}
+          name='region'
+          value={state?.region?.name}
+          onChange={handleAddressChange}
+          loading={regionsLoading}
+          required
         >
-          {regions?.map((type, i) => (
+          {regions?.map((region, i) => (
             <div
-              value={type?.key}
+              value={region?.hydra_id}
               key={i}
-            >{type?.value}</div>
+            >{region?.name}</div>
           ) || [])}
         </Select>
-        {currentRegion && <>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', }}>
-            <Button variant='success'
-              onClick={() => toggleCreateLocationModal(true)}
-              style={{
-                minWidth: '30px',
-                height: '30px',
-                minHeight: 'unset',
-                fontSize: '20px'
-              }}
-            >+</Button>
-            <Select
-              label='Битрикс локации'
-              name='locations'
-              onChange={handleLocationsChange}
-              loading={bitrixLocationsLoading}
-            >
-              {bitrixLocations?.map((type, i) => (
-                <div
-                  className='select-option'
-                  value={type?.name}
-                  key={i}
-                >{type?.name}</div>
-              ) || [])}
-            </Select>
-          </div>
-          <div className='picked-locations'>
-            {bitrixLocations?.map((location) => (
-              pickedLocations?.includes(location.name) && <span
-                className='picked-location'
-                onClick={() => onPickedBitrixLocationClick(location.name)}
-                key={location.name}
-              >
-              {location.name} &#10005;
-            </span>
-            ))}
-          </div>
-        </>}
+        {state?.region && <Select
+          label='Город/Район'
+          name='city'
+          value={state?.city?.name}
+          onChange={handleAddressChange}
+          loading={citiesLoading}
+          required
+        >
+          {cities?.map((location, i) => (
+            <div
+              className='select-option'
+              value={location?.hydra_id}
+              key={i}
+            >{location?.name}</div>
+          ) || [])}
+        </Select>}
+        {state?.city && <Select
+          label='Мкр/Ж-в/Село/Улица'
+          name='district'
+          value={state?.district?.name}
+          onChange={handleAddressChange}
+          loading={districtsLoading}
+          required
+        >
+          {districts?.map((location, i) => (
+            <div
+              className='select-option'
+              value={location?.hydra_id}
+              key={i}
+            >{location?.name}</div>
+          ) || [])}
+        </Select>}
+        {state?.district && <Select
+          label='Улица/Дом'
+          name='street'
+          value={state?.street?.name}
+          onChange={handleAddressChange}
+          loading={streetsLoading}
+          required
+        >
+          {streets?.map((location, i) => (
+            <div
+              className='select-option'
+              value={location?.hydra_id}
+              key={i}
+            >{location?.name}</div>
+          ) || [])}
+        </Select>}
+        {state?.street && !!houses?.length && <Select
+          label='Дом'
+          name='house'
+          value={state?.house?.name}
+          onChange={handleAddressChange}
+          loading={housesLoading}
+          required
+        >
+          {houses?.map((location, i) => (
+            <div
+              className='select-option'
+              value={location?.hydra_id}
+              key={i}
+            >{location?.name}</div>
+          ) || [])}
+        </Select>}
         <Input label='Кол-во абонентов'
           type='number'
           name='subscriber_count'
@@ -315,7 +377,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
               toggleModal();
               setState(null);
               setAddresses([]);
-              setCurrentRegion('');
             }}
           >
             Отмена
@@ -325,17 +386,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             style={{ padding: '8px 10px', flexGrow: 5 }}
             type='submit'
             loading={createTroubleLoading}
-            disabled={!addresses?.length || !pickedLocations?.length}
+            disabled={!addresses?.length}
           >
             Добавить
           </Button>
         </div>
       </form>
-      <CreateLocationModal
-        toggleModal={toggleCreateLocationModal}
-        open={createLocationModalOpen}
-        regionName={currentRegion}
-      />
     </div>
   );
 };

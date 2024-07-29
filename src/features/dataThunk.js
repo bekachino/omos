@@ -21,10 +21,62 @@ export const getTrouble = createAsyncThunk("data/getTrouble", async (id, {
     const response = await axiosApi(`incidents/${id}`);
     return response.data;
   } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 400) {
-      return rejectWithValue(smthIsWrongErrorMessage);
-    }
-    throw e;
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const getRegions = createAsyncThunk("data/getRegions", async (id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`hydra_list_regions/`);
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const getCities = createAsyncThunk("data/getCities", async (hydra_id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`get_child/?parent_id=${hydra_id}`);
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const getDistricts = createAsyncThunk("data/getDistricts", async (hydra_id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`get_child/?parent_id=${hydra_id}`);
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const getStreets = createAsyncThunk("data/getStreets", async (hydra_id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`get_child/?parent_id=${hydra_id}`);
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
+  }
+});
+
+export const getHouses = createAsyncThunk("data/getHouses", async (hydra_id, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`get_child/?parent_id=${hydra_id}`);
+    return response.data;
+  } catch (e) {
+    return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
 
@@ -35,10 +87,7 @@ export const getIncidentTypes = createAsyncThunk("data/getIncidentTypes", async 
     const response = await axiosApi(`/choices/incident-types/`);
     return response.data;
   } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 400) {
-      return rejectWithValue(smthIsWrongErrorMessage);
-    }
-    throw e;
+    return rejectWithValue(smthIsWrongErrorMessage);
   }
 });
 
@@ -61,20 +110,6 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
 }) => {
   try {
     const response = await axiosApi(`http://91.210.169.237:8001/news/api/all_location_list/?type=${location_type}`);
-    return response.data;
-  } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 400) {
-      return rejectWithValue(smthIsWrongErrorMessage);
-    }
-    throw e;
-  }
-});
-
-export const getBitrixLocations = createAsyncThunk("data/getBitrixLocations", async (region, {
-  rejectWithValue
-}) => {
-  try {
-    const response = await axiosApi(`locations/by_area/?area=${region}`);
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {

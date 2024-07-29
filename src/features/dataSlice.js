@@ -1,17 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  addLocation, deleteTrouble,
+  addLocation,
+  deleteTrouble,
   editCause,
   editComment,
   editSideAccident,
   editSolution,
-  editWorkStatus, getBitrixLocations,
+  editWorkStatus,
   getCauses,
+  getCities,
+  getDistricts, getHouses,
   getIncidentTypes,
   getLocations,
+  getRegions,
   getSideAccidentStatuses,
+  getStreets,
   getTrouble,
-  getTroubles, getWorkers,
+  getTroubles,
+  getWorkers,
   getWorkStatuses,
   getWorkTypes,
   postTrouble,
@@ -20,17 +26,25 @@ import {
 const initialState = {
   troubles: [],
   trouble: null,
+  regions: [],
+  cities: [],
+  districts: [],
+  streets: [],
+  houses: [],
   incident_types: [],
   work_types: [],
   locations: [],
-  bitrixLocations: [],
-  bitrixLocationsLoading: false,
   sideAccidentStatuses: [],
   workStatuses: [],
   causes: [],
   workers: [],
   troublesLoading: false,
   troubleLoading: false,
+  regionsLoading: false,
+  citiesLoading: false,
+  districtsLoading: false,
+  streetsLoading: false,
+  housesLoading: false,
   locationsLoading: false,
   createTroubleLoading: false,
   editSolutionLoading: false,
@@ -83,6 +97,61 @@ const DataSlice = createSlice({
       state.troubleLoading = false;
     });
     
+    builder.addCase(getRegions.pending, (state) => {
+      state.regionsLoading = true;
+    });
+    builder.addCase(getRegions.fulfilled, (state, { payload: res }) => {
+      state.regions = res || [];
+      state.regionsLoading = false;
+    });
+    builder.addCase(getRegions.rejected, (state) => {
+      state.regionsLoading = false;
+    });
+    
+    builder.addCase(getCities.pending, (state) => {
+      state.citiesLoading = true;
+    });
+    builder.addCase(getCities.fulfilled, (state, { payload: res }) => {
+      state.cities = res || [];
+      state.citiesLoading = false;
+    });
+    builder.addCase(getCities.rejected, (state) => {
+      state.citiesLoading = false;
+    });
+    
+    builder.addCase(getDistricts.pending, (state) => {
+      state.districtsLoading = true;
+    });
+    builder.addCase(getDistricts.fulfilled, (state, { payload: res }) => {
+      state.districts = res || [];
+      state.districtsLoading = false;
+    });
+    builder.addCase(getDistricts.rejected, (state) => {
+      state.districtsLoading = false;
+    });
+    
+    builder.addCase(getStreets.pending, (state) => {
+      state.streetsLoading = true;
+    });
+    builder.addCase(getStreets.fulfilled, (state, { payload: res }) => {
+      state.streets = res || [];
+      state.streetsLoading = false;
+    });
+    builder.addCase(getStreets.rejected, (state) => {
+      state.streetsLoading = false;
+    });
+    
+    builder.addCase(getHouses.pending, (state) => {
+      state.housesLoading = true;
+    });
+    builder.addCase(getHouses.fulfilled, (state, { payload: res }) => {
+      state.houses = res || [];
+      state.housesLoading = false;
+    });
+    builder.addCase(getHouses.rejected, (state) => {
+      state.housesLoading = false;
+    });
+    
     builder.addCase(getIncidentTypes.pending, (state) => {
       state.incidentTypesLoading = true;
     });
@@ -112,18 +181,6 @@ const DataSlice = createSlice({
     });
     builder.addCase(getLocations.rejected, (state) => {
       state.locationsLoading = false;
-    });
-    
-    builder.addCase(getBitrixLocations.pending, (state) => {
-      state.bitrixLocations = [];
-      state.bitrixLocationsLoading = true;
-    });
-    builder.addCase(getBitrixLocations.fulfilled, (state, { payload: res }) => {
-      state.bitrixLocations = res || [];
-      state.bitrixLocationsLoading = false;
-    });
-    builder.addCase(getBitrixLocations.rejected, (state) => {
-      state.bitrixLocationsLoading = false;
     });
     
     builder.addCase(getSideAccidentStatuses.pending, (state) => {
