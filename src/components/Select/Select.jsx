@@ -9,6 +9,7 @@ const Select = ({
   label,
   onChange,
   loading,
+  required,
   dontClearOnFocus,
   manualEditable,
   children
@@ -72,6 +73,7 @@ const Select = ({
       <Input
         type='text'
         value={currentValue}
+        required={required}
         onChange={e => {
           setShowOptions(true);
           if (manualEditable) {
@@ -99,8 +101,12 @@ const Select = ({
           setFocusedIndex(-1);
         }}
         ref={inputRef}
+        autocomplete='off'
       />
-      <div className={`select-toggler ${showOptions ? 'select-toggler-focused' : ''}`}>
+      <div
+        className={`select-toggler ${showOptions ? 'select-toggler-focused' : ''}`}
+        onClick={() => console.log(inputRef?.current)}
+      >
         <div className='select-arrow'><SelectArrow/></div>
       </div>
       <div
