@@ -181,11 +181,22 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   try {
     const formDataToBitrix = new FormData();
     
+    const location_areas = {
+      region: data?.region,
+      city: data?.city,
+      district: data?.district,
+      street: data?.street,
+      house: data?.house,
+    };
+    
+    formDataToBitrix.append('location_areas', JSON.stringify(location_areas));
     for (const key in data) {
       if (['addresses', 'locations'].includes(key)) {
         formDataToBitrix.append(key, JSON.stringify(data[key]));
-      } else formDataToBitrix.append(key, data[key]);
+      } else if (!['region', 'city', 'district', 'street', 'house'].includes(key)) formDataToBitrix.append(key, data[key]);
     }
+    
+    console.log(data);
     
     await axiosApi.post(`incident/create/`, formDataToBitrix);
   } catch (e) {
