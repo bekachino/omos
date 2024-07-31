@@ -125,7 +125,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
               <td>Номер</td>
               <td className='trouble-value-outlined'>
                 <span>
-                {trouble?.id}
+                {trouble?.id || '-'}
                 </span>
               </td>
             </tr>
@@ -157,7 +157,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
               <td>Кол-во абонентов</td>
               <td className='trouble-value-outlined'>
                 <span>
-                {trouble?.subscriber_count}
+                {trouble?.subscriber_count || '-'}
                 </span>
               </td>
             </tr>
@@ -165,7 +165,7 @@ const SingleTroubleModal = ({ open, toggleModal, troubleId }) => {
               <td>Локация</td>
               <td className='trouble-value-outlined'>
                 <span>
-                {trouble?.location}
+                {trouble?.location || '-'}
                 </span>
               </td>
             </tr>

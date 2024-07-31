@@ -19,7 +19,12 @@ import './troubles.css';
 const Troubles = () => {
   const dispatch = useAppDispatch();
   const {
-    troubles, page_size, troublesTabs, successMessage, errorMessage, deleteTroubleLoading,
+    troubles,
+    page_size,
+    troublesTabs,
+    successMessage,
+    errorMessage,
+    deleteTroubleLoading,
   } = useAppSelector(state => state.dataState);
   const [currentTab, setCurrentTab] = useState(1);
   const [singleTroubleModalOpen, setSingleTroubleModalOpen] = useState(false);
@@ -115,8 +120,8 @@ const Troubles = () => {
             <th>Время восставновл.</th>
             <th>Вр. отсутств. сервиса</th>
             <th>Кол-во абонентов</th>
-            <th>Локация</th>
-            <th>Сторона аварии (Элкат/Скайнет)</th>
+            <th style={{minWidth: '200px'}}>Локация</th>
+            <th style={{ maxWidth: '160px' }}>Сторона аварии (Элкат/Скайнет)</th>
             <th>Решение</th>
             <th>Причина</th>
             <th></th>

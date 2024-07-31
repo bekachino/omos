@@ -183,7 +183,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={state?.city?.name}
           onChange={handleAddressChange}
           loading={citiesLoading}
-          required
         >
           {cities?.map((location, i) => (
             <div
@@ -199,7 +198,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={state?.district?.name}
           onChange={handleAddressChange}
           loading={districtsLoading}
-          required
         >
           {districts?.map((location, i) => (
             <div
@@ -215,7 +213,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={state?.street?.name}
           onChange={handleAddressChange}
           loading={streetsLoading}
-          required
         >
           {streets?.map((location, i) => (
             <div
@@ -231,7 +228,6 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           value={state?.house?.name}
           onChange={handleAddressChange}
           loading={housesLoading}
-          required
         >
           {houses?.map((location, i) => (
             <div

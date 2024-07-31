@@ -31,7 +31,7 @@
   border: 1px solid #238854;
   border-radius: 5px;
   padding: 20px 35px;
-  width: 500px;
+  min-width: 500px;
   min-height: 500px;
   background-color: #FFFFFF;
   max-height: 80%;
