@@ -186,7 +186,7 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
       city: data?.city,
       district: data?.district,
       street: data?.street,
-      house: data?.house,
+      houses: data?.houses,
     };
     
     formDataToBitrix.append('location_areas', JSON.stringify(location_areas));

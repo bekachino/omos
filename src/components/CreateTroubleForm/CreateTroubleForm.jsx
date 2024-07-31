@@ -6,7 +6,8 @@ import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   getCities,
-  getDistricts, getHouses,
+  getDistricts,
+  getHouses,
   getIncidentTypes,
   getLocations,
   getRegions,
@@ -43,6 +44,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
+  const [housesList, setHousesList] = useState([]);
   
   useEffect(() => {
     dispatch(getRegions());
@@ -138,10 +140,24 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     setAddresses(filteredAddresses);
   };
   
+  const onHouseClick = (e) => {
+    const { value } = e.target;
+    if ([...housesList].filter(house => house?.hydra_id === value).length) return;
+    const pickedHouse = [...houses]?.filter(house => house?.hydra_id === value);
+    setHousesList(prevState => (
+      [...prevState, ...pickedHouse]
+    ));
+  };
+  
+  const onHouseDelete = (houseId) => {
+    const updatedVersion = [...housesList]?.filter(house => house?.id !== houseId);
+    setHousesList(updatedVersion);
+  };
+  
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      addresses, ...state,
+      addresses, ...state, houses: housesList.map(house => house?.id),
     }));
     toggleModal();
     setState(null);
@@ -222,21 +238,33 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{location?.name}</div>
           ) || [])}
         </Select>}
-        {state?.street && !!houses?.length && <Select
-          label='Дом'
-          name='house'
-          value={state?.house?.name}
-          onChange={handleAddressChange}
-          loading={housesLoading}
-        >
-          {houses?.map((location, i) => (
-            <div
-              className='select-option'
-              value={location?.hydra_id}
-              key={i}
-            >{location?.name}</div>
-          ) || [])}
-        </Select>}
+        {state?.street && !!houses?.length && <>
+          <Select
+            label='Дома'
+            value={state?.house?.name}
+            onChange={onHouseClick}
+            loading={housesLoading}
+          >
+            {houses?.map((location, i) => (
+              <div
+                className='select-option'
+                value={location?.hydra_id}
+                key={i}
+              >{location?.name}</div>
+            ) || [])}
+          </Select>
+          <div className='picked-locations'>
+            {housesList?.map((location) => (
+              <span
+                className='picked-location'
+                onClick={() => onHouseDelete(location?.id)}
+                key={location?.id}
+              >
+              {location.name} &#10005;
+            </span>
+            ))}
+          </div>
+        </>}
         <Input label='Кол-во абонентов'
           type='number'
           name='subscriber_count'
