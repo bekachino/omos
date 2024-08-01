@@ -157,7 +157,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      addresses, ...state, houses: housesList.map(house => house?.id),
+      addresses, ...state, houses: housesList,
     }));
     toggleModal();
     setState(null);
