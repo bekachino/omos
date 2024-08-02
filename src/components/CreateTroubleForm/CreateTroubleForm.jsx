@@ -44,6 +44,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState(null);
   const [addresses, setAddresses] = useState([]);
+  const [housesInsteadOfStreet, setHousesInsteadOfStreet] = useState([]);
   const [housesList, setHousesList] = useState([]);
   
   useEffect(() => {
@@ -74,35 +75,52 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       finalValue = regions.filter(region => region?.hydra_id === value)[0];
       if (value) {
         dispatch(getCities(value));
-      } else return setState(prevState => (
-        { ...prevState, region: null, city: null, district: null, street: null }
-      ));
+      } else {
+        setHousesInsteadOfStreet([]);
+        setHousesList([]);
+        return setState(prevState => (
+          {
+            ...prevState, region: null, city: null, district: null, street: null
+          }
+        ));
+      }
     } else if (name === 'city') {
       finalValue = cities.filter(city => city?.hydra_id === value)[0];
       if (value) {
         dispatch(getDistricts(value));
-      } else return setState(prevState => (
-        { ...prevState, city: null, district: null, street: null }
-      ));
+      } else {
+        setHousesInsteadOfStreet([]);
+        setHousesList([]);
+        return setState(prevState => (
+          { ...prevState, city: null, district: null, street: null }
+        ));
+      }
     } else if (name === 'district') {
       finalValue = districts.filter(district => district?.hydra_id === value)[0];
       if (value) {
         dispatch(getStreets(value));
-      } else return setState(prevState => (
-        { ...prevState, district: null, street: null }
-      ));
+      } else {
+        setHousesInsteadOfStreet([]);
+        setHousesList([]);
+        return setState(prevState => (
+          { ...prevState, district: null, street: null }
+        ));
+      }
     } else if (name === 'street') {
       finalValue = streets.filter(street => street?.hydra_id === value)[0];
       if (value) {
-        dispatch(getHouses(value));
-      } else return setState(prevState => (
-        { ...prevState, street: null }
-      ));
-    } else if (name === 'house') {
-      finalValue = houses.filter(street => street?.hydra_id === value)[0];
-      if (!value) return setState(prevState => (
-        { ...prevState, house: null, }
-      ));
+        if (finalValue?.name?.slice(0, 3) === 'д. ') {
+          setHousesInsteadOfStreet(prevState => (
+            [...prevState, finalValue]
+          ));
+        } else dispatch(getHouses(value));
+      } else {
+        setHousesInsteadOfStreet([]);
+        setHousesList([]);
+        return setState(prevState => (
+          { ...prevState, street: null }
+        ));
+      }
     }
     
     setState(prevState => (
@@ -149,19 +167,51 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     ));
   };
   
-  const onHouseDelete = (houseId) => {
-    const updatedVersion = [...housesList]?.filter(house => house?.id !== houseId);
-    setHousesList(updatedVersion);
+  const onHouseButNoStreetClick = (e) => {
+    const { value } = e.target;
+    if ([...housesInsteadOfStreet].filter(house => house?.hydra_id === value).length) return;
+    const pickedHouse = [...streets]?.filter(house => house?.hydra_id === value);
+    if (pickedHouse?.[0]?.name?.slice(0, 3) === 'ул.') {
+      setState(prevState => (
+        {
+          ...prevState, street: pickedHouse[0],
+        }
+      ));
+      dispatch(getHouses(value));
+    } else {
+      setState(prevState => (
+        {
+          ...prevState, street: null,
+        }
+      ));
+      setHousesInsteadOfStreet(prevState => (
+        [...prevState, ...pickedHouse]
+      ));
+    }
+  };
+  
+  const onHouseDelete = (name, houseId) => {
+    if (name === 'houses') {
+      const updatedVersion = [...housesList]?.filter(item => item?.id !== houseId);
+      setHousesList(updatedVersion);
+    } else if (name === 'housesInsteadOfStreet') {
+      const updatedVersion = [...housesInsteadOfStreet]?.filter(item => item?.id !== houseId);
+      setHousesInsteadOfStreet(updatedVersion);
+    }
   };
   
   const onSubmit = async e => {
     e.preventDefault();
     await dispatch(postTrouble({
-      addresses, ...state, houses: housesList,
+      addresses, ...state,
+      houses: housesList,
+      street: housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street
     }));
-    toggleModal();
-    setState(null);
-    setAddresses([]);
+    //toggleModal();
+    //setState(null);
+    //setAddresses([]);
+    //setHousesList([]);
+    //setHousesInsteadOfStreet([]);
   };
   
   return (
@@ -223,21 +273,34 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{location?.name}</div>
           ) || [])}
         </Select>}
-        {state?.district && <Select
-          label='Улица/Дом'
-          name='street'
-          value={state?.street?.name}
-          onChange={handleAddressChange}
-          loading={streetsLoading}
-        >
-          {streets?.map((location, i) => (
-            <div
-              className='select-option'
-              value={location?.hydra_id}
-              key={i}
-            >{location?.name}</div>
-          ) || [])}
-        </Select>}
+        {state?.district && <>
+          <Select
+            label='Улица/Дом'
+            name='street'
+            value={state?.street?.name}
+            onChange={onHouseButNoStreetClick}
+            loading={streetsLoading}
+          >
+            {streets?.map((location, i) => (
+              <div
+                className='select-option'
+                value={location?.hydra_id}
+                key={i}
+              >{location?.name}</div>
+            ) || [])}
+          </Select>
+          <div className='picked-locations'>
+            {housesInsteadOfStreet?.map((location) => (
+              <span
+                className='picked-location'
+                onClick={() => onHouseDelete('housesInsteadOfStreet', location?.id)}
+                key={location?.id}
+              >
+                {location.name} &#10005;
+              </span>
+            ))}
+          </div>
+        </>}
         {state?.street && !!houses?.length && <>
           <Select
             label='Дома'
@@ -257,7 +320,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             {housesList?.map((location) => (
               <span
                 className='picked-location'
-                onClick={() => onHouseDelete(location?.id)}
+                onClick={() => onHouseDelete('houses', location?.id)}
                 key={location?.id}
               >
               {location.name} &#10005;
