@@ -179,6 +179,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       ));
       dispatch(getHouses(value));
     } else {
+      setHousesList([]);
       setState(prevState => (
         {
           ...prevState, street: null,
@@ -207,11 +208,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       houses: housesList,
       street: housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street
     }));
-    //toggleModal();
-    //setState(null);
-    //setAddresses([]);
-    //setHousesList([]);
-    //setHousesInsteadOfStreet([]);
+    toggleModal();
+    setState(null);
+    setAddresses([]);
+    setHousesList([]);
+    setHousesInsteadOfStreet([]);
   };
   
   return (
