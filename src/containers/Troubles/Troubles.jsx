@@ -120,7 +120,7 @@ const Troubles = () => {
             <th>Время восставновл.</th>
             <th>Вр. отсутств. сервиса</th>
             <th>Кол-во абонентов</th>
-            <th style={{minWidth: '200px'}}>Локация</th>
+            <th style={{ minWidth: '200px' }}>Локация</th>
             <th style={{ maxWidth: '160px' }}>Сторона аварии (Элкат/Скайнет)</th>
             <th>Решение</th>
             <th>Причина</th>
@@ -139,7 +139,7 @@ const Troubles = () => {
               <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
               <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
               <td>{trouble?.subscriber_count}</td>
-              <td>{trouble?.location}</td>
+              <td>{trouble?.location_areas}</td>
               <td>{trouble?.side_accident}</td>
               <td>{trouble?.solution}</td>
               <td>{trouble?.cause}</td>
