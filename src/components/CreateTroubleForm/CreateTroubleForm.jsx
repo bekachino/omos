@@ -203,7 +203,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   
   const onSubmit = async e => {
     e.preventDefault();
-    const street = state?.district && (state?.district?.name?.includes('ул.') || state?.district?.name?.includes('мкр.')) ? housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets : (housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets);
+    const street = state?.district && (
+      state?.district?.name?.includes('ул.') || state?.district?.name?.includes('мкр.')
+    ) ? housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets : (
+      housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets
+    );
     await dispatch(postTrouble({
       addresses, ...state,
       houses: state?.street && street ? housesList.length ? housesList : houses : [],
