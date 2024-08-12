@@ -173,13 +173,13 @@ const Troubles = () => {
                 {(
                   (
                     () => {
-                      if (typeof trouble?.location_areas === 'string') return trouble?.location_areas;
+                      if (!trouble?.location_areas.includes('{')) return trouble?.location_areas;
                       const parsed = JSON.parse(trouble?.location_areas?.replace(/'/g, '"'));
                       const region = parsed?.region?.name;
                       const city = parsed?.city?.name;
                       const district = parsed?.district?.name;
                       const streets = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
-                      const houses = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
+                      const houses = Array.isArray(parsed?.houses) ? parsed?.houses?.map(house => house.name)?.join(',  ') : parsed?.houses?.name;
                       return `${region}, ${city}, ${district}, ${streets}, ${houses}`;
                     }
                   )

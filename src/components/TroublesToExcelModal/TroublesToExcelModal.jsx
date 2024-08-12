@@ -6,7 +6,10 @@ import './troublesToExcelModal.css';
 import Button from "../Button/Button";
 import axiosApi from "../../axiosApi";
 
-const TroublesToExcelModal = ({ open, toggleModal }) => {
+const TroublesToExcelModal = ({
+  open,
+  toggleModal
+}) => {
   const [state, setState] = useState({
     periodDate1: moment().subtract(7, 'days').format('DD.MM.YYYY'),
     periodDate2: moment().subtract(1, 'days').format('DD.MM.YYYY'),
@@ -17,27 +20,34 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
     if (!state.periodDate1) {
       setState(prevState => (
         {
-          ...prevState, periodDate1: value, date2: '',
+          ...prevState,
+          periodDate1: value,
+          date2: '',
         }
       ));
     } else if (state.periodDate1 && !state.periodDate2) {
       if (moment(value, 'DD.MM.YYYY').isBefore(moment(state.periodDate1, 'DD.MM.YYYY'))) {
         setState(prevState => (
           {
-            ...prevState, periodDate1: value, periodDate2: state.periodDate1,
+            ...prevState,
+            periodDate1: value,
+            periodDate2: state.periodDate1,
           }
         ));
       } else {
         setState(prevState => (
           {
-            ...prevState, periodDate2: value,
+            ...prevState,
+            periodDate2: value,
           }
         ));
       }
     } else if (state.periodDate1 && state.periodDate2) {
       setState(prevState => (
         {
-          ...prevState, periodDate1: value, periodDate2: '',
+          ...prevState,
+          periodDate1: value,
+          periodDate2: '',
         }
       ));
     }
@@ -53,7 +63,20 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
       const res = await req.data.results;
       setTroublesLoading(false);
       if (res.length) {
-        await handleExcelFileExport(res);
+        const result = res?.map(trouble => {
+          if (!trouble?.location_areas.includes('{')) return trouble?.location_areas;
+          const parsed = JSON.parse(trouble?.location_areas?.replace(/'/g, '"'));
+          const region = parsed?.region?.name;
+          const city = parsed?.city?.name;
+          const district = parsed?.district?.name;
+          const streets = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
+          const houses = Array.isArray(parsed?.houses) ? parsed?.houses?.map(house => house.name)?.join(',  ') : parsed?.houses?.name;
+          return {
+            ...trouble,
+            location_areas: `${region}, ${city}, ${district}, ${streets}, ${houses}`,
+          };
+        })
+        await handleExcelFileExport(result);
         toggleModal();
       }
     } catch (e) {
@@ -93,7 +116,8 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
       onClick={() => toggleModal()}
       open={open}
     >
-      <div className='single-trouble-modal'
+      <div
+        className='single-trouble-modal'
         onClick={e => e.stopPropagation()}
       >
         <h3>Выгрузить список аварий в Excel файл</h3>
@@ -105,7 +129,8 @@ const TroublesToExcelModal = ({ open, toggleModal }) => {
         <Button
           variant='success'
           style={{
-            padding: '4px 8px', width: '100%'
+            padding: '4px 8px',
+            width: '100%'
           }}
           loading={troublesLoading}
           disabled={!state?.periodDate1 || !state?.periodDate2}
