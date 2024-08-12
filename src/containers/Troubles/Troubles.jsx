@@ -44,14 +44,30 @@ const Troubles = () => {
   }, []);
   
   useEffect(() => {
-    dispatch(getTroubles({ currentTab, page_size }));
-  }, [currentTab, dispatch, page_size]);
+    dispatch(getTroubles({
+      currentTab,
+      page_size
+    }));
+  }, [
+    currentTab,
+    dispatch,
+    page_size
+  ]);
   
   useEffect(() => {
     if (successMessage || errorMessage) {
-      if (!errorMessage) dispatch(getTroubles({ currentTab, page_size }));
+      if (!errorMessage) dispatch(getTroubles({
+        currentTab,
+        page_size
+      }));
     }
-  }, [currentTab, dispatch, errorMessage, page_size, successMessage]);
+  }, [
+    currentTab,
+    dispatch,
+    errorMessage,
+    page_size,
+    successMessage
+  ]);
   
   const tabToPrev = () => {
     if (currentTab > 1) {
@@ -81,7 +97,10 @@ const Troubles = () => {
   const onTroubleDelete = async () => {
     if (currentTooltip) {
       await dispatch(deleteTrouble(currentTooltip));
-      dispatch(getTroubles({ currentTab, page_size }));
+      dispatch(getTroubles({
+        currentTab,
+        page_size
+      }));
       setCurrentTooltip(null);
     }
   };
@@ -96,16 +115,24 @@ const Troubles = () => {
             value={successMessage || errorMessage}
             variant={successMessage ? 'success' : errorMessage ? 'error' : 'default'}
           />
-          <Button variant='success'
+          <Button
+            variant='success'
             onClick={toggleTroublesToExcelModal}
-            style={{ padding: '18px 75px 14px', marginLeft: 'auto' }}
+            style={{
+              padding: '18px 75px 14px',
+              marginLeft: 'auto'
+            }}
           >
             <PostNewTrouble/>
             Выгрузить аварии в excel
           </Button>
-          <Button variant='success'
+          <Button
+            variant='success'
             onClick={toggleCreateTroubleModal}
-            style={{ padding: '18px 75px 14px', marginLeft: '20px' }}
+            style={{
+              padding: '18px 75px 14px',
+              marginLeft: '20px'
+            }}
           >
             <PostNewTrouble/>
             Добавить новость
@@ -121,7 +148,8 @@ const Troubles = () => {
             <th>Вр. отсутств. сервиса</th>
             <th>Кол-во абонентов</th>
             <th style={{ minWidth: '200px' }}>Локация</th>
-            <th style={{ maxWidth: '160px' }}>Сторона аварии (Элкат/Скайнет)</th>
+            <th style={{ maxWidth: '160px' }}>Сторона аварии (Элкат/Скайнет)
+            </th>
             <th>Решение</th>
             <th>Причина</th>
             <th></th>
@@ -130,8 +158,10 @@ const Troubles = () => {
           <tbody>
           {troubles.map(trouble => (
             <tr key={trouble?.id}>
-              <td className='trouble-id'
-                onClick={() => toggleSingleTroubleModal(trouble?.id)}>{trouble?.id}</td>
+              <td
+                className='trouble-id'
+                onClick={() => toggleSingleTroubleModal(trouble?.id)}
+              >{trouble?.id}</td>
               <td
                 className={trouble?.work_status === 'В процессе Омос' ? 'trouble-status-1' : trouble?.work_status === 'Работа у си' ? 'trouble-status-2' : trouble?.work_status === 'Завершено' ? 'trouble-status-3' : ''}
               >{trouble?.work_status}</td>
@@ -139,7 +169,22 @@ const Troubles = () => {
               <td>{trouble?.restore_time ? formatDate(trouble?.restore_time) : '-'}</td>
               <td>{trouble?.duration ? formatDuration(trouble?.duration) : '-'}</td>
               <td>{trouble?.subscriber_count}</td>
-              <td>{trouble?.location_areas}</td>
+              <td>
+                {(
+                  (
+                    () => {
+                      if (typeof trouble?.location_areas === 'string') return trouble?.location_areas;
+                      const parsed = JSON.parse(trouble?.location_areas?.replace(/'/g, '"'));
+                      const region = parsed?.region?.name;
+                      const city = parsed?.city?.name;
+                      const district = parsed?.district?.name;
+                      const streets = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
+                      const houses = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
+                      return `${region}, ${city}, ${district}, ${streets}, ${houses}`;
+                    }
+                  )
+                )()}
+              </td>
               <td>{trouble?.side_accident}</td>
               <td>{trouble?.solution}</td>
               <td>{trouble?.cause}</td>
@@ -172,8 +217,10 @@ const Troubles = () => {
         </table>
         <div className='troubles-pagination-container'>
           <div className='troubles-pagination'>
-            <div className='troubles-to-prev-list'
-              onClick={tabToPrev}>Пред
+            <div
+              className='troubles-to-prev-list'
+              onClick={tabToPrev}
+            >Пред
             </div>
             <div className='troubles-tab-numbers'>
               {troublesTabs.map((tab) => (
@@ -209,8 +256,10 @@ const Troubles = () => {
                 </React.Fragment>
               ))}
             </div>
-            <div className='troubles-to-next-list'
-              onClick={tabToNext}>След
+            <div
+              className='troubles-to-next-list'
+              onClick={tabToNext}
+            >След
             </div>
           </div>
         </div>
