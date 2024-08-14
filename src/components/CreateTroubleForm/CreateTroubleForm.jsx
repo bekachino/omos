@@ -210,7 +210,7 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     );
     await dispatch(postTrouble({
       addresses, ...state,
-      houses: state?.street && street ? housesList.length ? housesList : houses : [],
+      houses: state?.street && street ? housesList.length ? housesList : null : [],
       street,
     }));
     toggleModal();
