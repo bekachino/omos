@@ -20,7 +20,10 @@ import { locationTypes } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
 import './createTroubleForm.css';
 
-const CreateTroubleForm = ({ open, toggleModal }) => {
+const CreateTroubleForm = ({
+  open,
+  toggleModal
+}) => {
   const dispatch = useAppDispatch();
   const {
     regions,
@@ -59,16 +62,23 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       setAddresses([]);
       dispatch(getLocations(state?.post_type));
     }
-  }, [dispatch, state?.post_type]);
+  }, [
+    dispatch,
+    state?.post_type
+  ]);
   
   const handleChange = e => setState(prevState => (
     {
-      ...prevState, [e.target.name]: e.target.value,
+      ...prevState,
+      [e.target.name]: e.target.value,
     }
   ));
   
   const handleAddressChange = e => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value
+    } = e.target;
     let finalValue = '';
     
     if (name === 'region') {
@@ -80,7 +90,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         setHousesList([]);
         return setState(prevState => (
           {
-            ...prevState, region: null, city: null, district: null, street: null
+            ...prevState,
+            region: null,
+            city: null,
+            district: null,
+            street: null
           }
         ));
       }
@@ -92,7 +106,12 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         setHousesInsteadOfStreet([]);
         setHousesList([]);
         return setState(prevState => (
-          { ...prevState, city: null, district: null, street: null }
+          {
+            ...prevState,
+            city: null,
+            district: null,
+            street: null
+          }
         ));
       }
     } else if (name === 'district') {
@@ -103,7 +122,11 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         setHousesInsteadOfStreet([]);
         setHousesList([]);
         return setState(prevState => (
-          { ...prevState, district: null, street: null }
+          {
+            ...prevState,
+            district: null,
+            street: null
+          }
         ));
       }
     } else if (name === 'street') {
@@ -111,21 +134,28 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       if (value) {
         if (finalValue?.name?.slice(0, 3) === 'д. ') {
           setHousesInsteadOfStreet(prevState => (
-            [...prevState, finalValue]
+            [
+              ...prevState,
+              finalValue
+            ]
           ));
         } else dispatch(getHouses(value));
       } else {
         setHousesInsteadOfStreet([]);
         setHousesList([]);
         return setState(prevState => (
-          { ...prevState, street: null }
+          {
+            ...prevState,
+            street: null
+          }
         ));
       }
     }
     
     setState(prevState => (
       {
-        ...prevState, [name]: finalValue,
+        ...prevState,
+        [name]: finalValue,
       }
     ));
   };
@@ -133,14 +163,18 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const handleAddressesChange = e => {
     if (typeof e.target.value === 'string') return;
     if (!addresses.includes(e.target.value)) {
-      setAddresses([...addresses, e.target.value]);
+      setAddresses([
+        ...addresses,
+        e.target.value
+      ]);
     }
   };
   
   const handleFileChange = (e) => {
     setState((prevState) => (
       {
-        ...prevState, image: e.target.files[0],
+        ...prevState,
+        image: e.target.files[0],
       }
     ));
   };
@@ -148,7 +182,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
   const removeImage = () => {
     setState((prevState) => (
       {
-        ...prevState, image: null,
+        ...prevState,
+        image: null,
       }
     ));
   };
@@ -163,7 +198,10 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     if ([...housesList].filter(house => house?.hydra_id === value).length) return;
     const pickedHouse = [...houses]?.filter(house => house?.hydra_id === value);
     setHousesList(prevState => (
-      [...prevState, ...pickedHouse]
+      [
+        ...prevState,
+        ...pickedHouse
+      ]
     ));
   };
   
@@ -174,7 +212,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     if (pickedHouse?.[0]?.name?.slice(0, 3) === 'ул.') {
       setState(prevState => (
         {
-          ...prevState, street: pickedHouse[0],
+          ...prevState,
+          street: pickedHouse[0],
         }
       ));
       dispatch(getHouses(value));
@@ -182,11 +221,15 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
       setHousesList([]);
       setState(prevState => (
         {
-          ...prevState, street: null,
+          ...prevState,
+          street: null,
         }
       ));
       setHousesInsteadOfStreet(prevState => (
-        [...prevState, ...pickedHouse]
+        [
+          ...prevState,
+          ...pickedHouse
+        ]
       ));
     }
   };
@@ -205,37 +248,40 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
     e.preventDefault();
     const street = state?.district && (
       state?.district?.name?.includes('ул.') || state?.district?.name?.includes('мкр.')
-    ) ? housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets : (
-      housesInsteadOfStreet.length || state?.street ? housesInsteadOfStreet.length ? housesInsteadOfStreet : state?.street : streets
-    );
+    ) ? state?.street?.name ? state?.street : housesInsteadOfStreet?.length ? housesInsteadOfStreet : streets : state?.street;
     await dispatch(postTrouble({
       addresses, ...state,
       houses: state?.street && street ? housesList.length ? housesList : null : [],
       street,
     }));
-    toggleModal();
-    setState(null);
-    setAddresses([]);
-    setHousesList([]);
-    setHousesInsteadOfStreet([]);
+    //toggleModal();
+    //setState(null);
+    //setAddresses([]);
+    //setHousesList([]);
+    //setHousesInsteadOfStreet([]);
   };
   
   return (
-    <div className='create-trouble-form-container'
+    <div
+      className='create-trouble-form-container'
       onClick={toggleModal}
       open={open}
     >
-      <form className='create-trouble-form'
+      <form
+        className='create-trouble-form'
         onClick={e => e.stopPropagation()}
-        onSubmit={onSubmit}>
+        onSubmit={onSubmit}
+      >
         <h3>Добавление новости</h3>
-        <Input label='Название'
+        <Input
+          label='Название'
           name='title'
           value={state?.title}
           onChange={handleChange}
           required
         />
-        <Select label='Выберите область'
+        <Select
+          label='Выберите область'
           name='region'
           value={state?.region?.name}
           onChange={handleAddressChange}
@@ -334,19 +380,22 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             ))}
           </div>
         </>}
-        <Input label='Кол-во абонентов'
+        <Input
+          label='Кол-во абонентов'
           type='number'
           name='subscriber_count'
           value={state?.subscriber_count}
           onChange={handleChange}
           required
         />
-        <Input label='ОЛТ'
+        <Input
+          label='ОЛТ'
           name='olt'
           value={state?.olt}
           onChange={handleChange}
         />
-        <Input label='Порт'
+        <Input
+          label='Порт'
           name='port'
           value={state?.port}
           onChange={handleChange}
@@ -384,13 +433,15 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{type?.value}</div>
           ))}
         </Select>
-        {state?.incident_type === 'maintenance' && <Input label='Длительность'
+        {state?.incident_type === 'maintenance' && <Input
+          label='Длительность'
           name='work_duration'
           value={state?.work_duration}
           onChange={handleChange}
           required
         />}
-        {state?.incident_type === 'maintenance' && <Select label='Тип работы'
+        {state?.incident_type === 'maintenance' && <Select
+          label='Тип работы'
           name='work_type'
           value={work_types?.filter(worker => worker.key === state?.work_type)[0]?.value}
           options={work_types}
@@ -421,7 +472,8 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             >{location?.value}</div>
           ))}
         </Select>
-        {state?.post_type && <Select label='Локации для абонентского приложения'
+        {state?.post_type && <Select
+          label='Локации для абонентского приложения'
           name='locations'
           onChange={handleAddressesChange}
           loading={locationsLoading}
@@ -445,19 +497,22 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
             </span>
           ))}
         </div>
-        <TextArea label='Описание'
+        <TextArea
+          label='Описание'
           name='description'
           value={state?.description}
           onChange={handleChange}
           required
         />
-        <TextArea label='Текст абонентского'
+        <TextArea
+          label='Текст абонентского'
           name='text'
           value={state?.text}
           onChange={handleChange}
           required
         />
-        <FileUpload handleFileChange={handleFileChange}
+        <FileUpload
+          handleFileChange={handleFileChange}
           file={state?.image}
           removeImage={removeImage}
           label='загрузите фото'
@@ -465,7 +520,10 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
         <div className='create-trouble-form-btns'>
           <Button
             variant='error'
-            style={{ padding: '8px 10px', flexGrow: 1 }}
+            style={{
+              padding: '8px 10px',
+              flexGrow: 1
+            }}
             onClick={() => {
               toggleModal();
               setState(null);
@@ -476,7 +534,10 @@ const CreateTroubleForm = ({ open, toggleModal }) => {
           </Button>
           <Button
             variant='success'
-            style={{ padding: '8px 10px', flexGrow: 5 }}
+            style={{
+              padding: '8px 10px',
+              flexGrow: 5
+            }}
             type='submit'
             loading={createTroubleLoading}
             disabled={!addresses?.length}
