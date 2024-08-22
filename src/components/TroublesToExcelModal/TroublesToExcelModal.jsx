@@ -64,7 +64,9 @@ const TroublesToExcelModal = ({
       setTroublesLoading(false);
       if (res.length) {
         const result = res?.map(trouble => {
-          if (!trouble?.location_areas.includes('{')) return trouble?.location_areas;
+          if (!trouble?.location_areas.includes('{')) return {
+            ...trouble,
+          };
           const parsed = JSON.parse(trouble?.location_areas?.replace(/'/g, '"'));
           const region = parsed?.region?.name;
           const city = parsed?.city?.name;
