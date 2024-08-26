@@ -254,11 +254,11 @@ const CreateTroubleForm = ({
       houses: state?.street && street ? housesList.length ? housesList : null : [],
       street,
     }));
-    //toggleModal();
-    //setState(null);
-    //setAddresses([]);
-    //setHousesList([]);
-    //setHousesInsteadOfStreet([]);
+    toggleModal();
+    setState(null);
+    setAddresses([]);
+    setHousesList([]);
+    setHousesInsteadOfStreet([]);
   };
   
   return (
