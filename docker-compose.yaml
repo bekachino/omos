@@ -1,8 +1,0 @@
-#services:
-#  omos:
-#    build: ./
-#    container_name: OMOS
-#    ports:
-#      - '3000:3000'
-#    stdin_open: true
-#    tty: true
