@@ -3,18 +3,45 @@ export const apiUrl = 'http://planup.skynet.kg:8000/planup/';
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 
 export const locationTypes = [
-  { key: 'region', value: 'регион' },
-  { key: 'city', value: 'город' },
-  { key: 'dist', value: 'район' },
+  {
+    key: 'region',
+    value: 'регион',
+  },
+  {
+    key: 'city',
+    value: 'город'
+  },
+  {
+    key: 'dist',
+    value: 'район'
+  },
 ];
 
 export const regions = [
-  { key: 'chuy', value: 'Чуй' },
-  { key: 'naryn', value: 'Нарын' },
-  { key: 'talas', value: 'Талас' },
-  { key: 'issyk_kul', value: 'Иссык-Куль' },
-  { key: 'jalal_abad', value: 'Джалал-Абад' },
-  { key: 'osh', value: 'Ош' },
+  {
+    key: 'chuy',
+    value: 'Чуй'
+  },
+  {
+    key: 'naryn',
+    value: 'Нарын'
+  },
+  {
+    key: 'talas',
+    value: 'Талас'
+  },
+  {
+    key: 'issyk_kul',
+    value: 'Иссык-Куль'
+  },
+  {
+    key: 'jalal_abad',
+    value: 'Джалал-Абад'
+  },
+  {
+    key: 'osh',
+    value: 'Ош'
+  },
 ];
 
 export const formatDate = (date) => {
