@@ -67,6 +67,25 @@ const CreateTroubleForm = ({
     state?.post_type
   ]);
   
+  useEffect(() => {
+    if (!open) return;
+    
+    const imagePath = require("../../assets/important-thumb.jpg");
+    
+    fetch(imagePath)
+    .then((res) => res.blob()) // Get image as a blob
+    .then((blob) => {
+      const file = new File([blob], "important-thumb.jpg", { type: blob.type });
+      setState(prevState => (
+        {
+          ...prevState,
+          image: file,
+        }
+      ));
+    })
+    .catch(_ => {});
+  }, [open]);
+  
   const handleChange = e => setState(prevState => (
     {
       ...prevState,
@@ -209,29 +228,19 @@ const CreateTroubleForm = ({
     const { value } = e.target;
     if ([...housesInsteadOfStreet].filter(house => house?.hydra_id === value).length) return;
     const pickedHouse = [...streets]?.filter(house => house?.hydra_id === value);
-    if (pickedHouse?.[0]?.name?.slice(0, 3) === 'ул.') {
-      setState(prevState => (
-        {
-          ...prevState,
-          street: pickedHouse[0],
-        }
-      ));
-      dispatch(getHouses(value));
-    } else {
-      setHousesList([]);
-      setState(prevState => (
-        {
-          ...prevState,
-          street: null,
-        }
-      ));
-      setHousesInsteadOfStreet(prevState => (
-        [
-          ...prevState,
-          ...pickedHouse
-        ]
-      ));
-    }
+    setHousesList([]);
+    setState(prevState => (
+      {
+        ...prevState,
+        street: null,
+      }
+    ));
+    setHousesInsteadOfStreet(prevState => (
+      [
+        ...prevState,
+        ...pickedHouse
+      ]
+    ));
   };
   
   const onHouseDelete = (name, houseId) => {
