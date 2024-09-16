@@ -45,10 +45,13 @@ const CreateTroubleForm = ({
     workersLoading,
     createTroubleLoading,
   } = useAppSelector(state => state.dataState);
-  const [state, setState] = useState(null);
+  const [state, setState] = useState({
+    text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
+  });
   const [addresses, setAddresses] = useState([]);
   const [housesInsteadOfStreet, setHousesInsteadOfStreet] = useState([]);
   const [housesList, setHousesList] = useState([]);
+  const [troubleSide, setTroubleSide] = useState('Элкат');
   
   useEffect(() => {
     dispatch(getRegions());
@@ -240,6 +243,17 @@ const CreateTroubleForm = ({
         ...prevState,
         ...pickedHouse
       ]
+    ));
+  };
+  
+  const troubleSideHandler = e => {
+    const { value } = e.target;
+    setTroubleSide(value);
+    setState(prevState => (
+      {
+        ...prevState,
+        text: value === 'Элкат' ? 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.' : value === 'Скайнет' ? 'Добрый день, уважаемый абонент, на данный момент проводятся работы по модернизации сети для более качественного сервиса и улучшения ваших сигналов, просим Вас ожидать, в ближайшее время сервис восстановится. Спасибо за понимание!' : '',
+      }
     ));
   };
   
@@ -513,12 +527,32 @@ const CreateTroubleForm = ({
           onChange={handleChange}
           required
         />
+        <Select
+          label='Сторона аварии'
+          name='troubleSide'
+          value={troubleSide}
+          options={incident_types}
+          onChange={troubleSideHandler}
+          required
+        >
+          <div
+            className='select-option'
+            value='Элкат'
+          >Элкат
+          </div>
+          <div
+            className='select-option'
+            value='Скайнет'
+          >Скайнет
+          </div>
+        </Select>
         <TextArea
           label='Текст абонентского'
           name='text'
           value={state?.text}
           onChange={handleChange}
           required
+          disabled
         />
         <FileUpload
           handleFileChange={handleFileChange}
