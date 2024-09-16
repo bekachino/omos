@@ -552,7 +552,7 @@ const CreateTroubleForm = ({
           value={state?.text}
           onChange={handleChange}
           required
-          disabled
+          style={{height: '230px'}}
         />
         <FileUpload
           handleFileChange={handleFileChange}

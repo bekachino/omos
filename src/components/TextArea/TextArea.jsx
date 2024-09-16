@@ -7,7 +7,8 @@ const TextArea = ({
   value,
   onChange,
   required,
-  disabled
+  disabled,
+  style,
 }) => {
   return (
     <div className='textarea-container'>
@@ -18,6 +19,7 @@ const TextArea = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
+        style={style}
       />
       <label className='textarea-label'>{label}</label>
     </div>
