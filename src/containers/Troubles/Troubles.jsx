@@ -180,7 +180,7 @@ const Troubles = () => {
                       const district = parsed?.district?.name;
                       const streets = Array.isArray(parsed?.street) ? parsed?.street?.map(street => street.name)?.join(',  ') : parsed?.street?.name;
                       const houses = Array.isArray(parsed?.houses) ? parsed?.houses?.map(house => house.name)?.join(',  ') : parsed?.houses?.name;
-                      return `${region}, ${city}, ${district}, ${streets}, ${houses}`;
+                      return `${region} ${city ? `, ${city}` : ''} ${district ? `, ${district}` : ''} ${streets ? `, ${streets}` : ''} ${houses ? `, ${houses}` : ''}`;
                     }
                   )
                 )()}
