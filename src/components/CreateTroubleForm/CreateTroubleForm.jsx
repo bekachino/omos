@@ -34,7 +34,6 @@ const CreateTroubleForm = ({
     districtsLoading,
     streets,
     houses,
-    housesLoading,
     streetsLoading,
     incident_types,
     incidentTypesLoading,
@@ -215,18 +214,6 @@ const CreateTroubleForm = ({
     setAddresses(filteredAddresses);
   };
   
-  const onHouseClick = (e) => {
-    const { value } = e.target;
-    if ([...housesList].filter(house => house?.hydra_id === value).length) return;
-    const pickedHouse = [...houses]?.filter(house => house?.hydra_id === value);
-    setHousesList(prevState => (
-      [
-        ...prevState,
-        ...pickedHouse
-      ]
-    ));
-  };
-  
   const onHouseButNoStreetClick = (e) => {
     const { value } = e.target;
     if ([...housesInsteadOfStreet].filter(house => house?.hydra_id === value).length) return;
@@ -258,10 +245,7 @@ const CreateTroubleForm = ({
   };
   
   const onHouseDelete = (name, houseId) => {
-    if (name === 'houses') {
-      const updatedVersion = [...housesList]?.filter(item => item?.id !== houseId);
-      setHousesList(updatedVersion);
-    } else if (name === 'housesInsteadOfStreet') {
+    if (name === 'housesInsteadOfStreet') {
       const updatedVersion = [...housesInsteadOfStreet]?.filter(item => item?.id !== houseId);
       setHousesInsteadOfStreet(updatedVersion);
     }
@@ -272,7 +256,6 @@ const CreateTroubleForm = ({
     const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : streets;
     await dispatch(postTrouble({
       addresses, ...state,
-      houses: state?.street && street ? housesList.length ? housesList : null : [],
       street,
     }));
     toggleModal();
@@ -373,33 +356,6 @@ const CreateTroubleForm = ({
               >
                 {location.name} &#10005;
               </span>
-            ))}
-          </div>
-        </>}
-        {state?.street && !!houses?.length && <>
-          <Select
-            label='Дома'
-            value={state?.house?.name}
-            onChange={onHouseClick}
-            loading={housesLoading}
-          >
-            {houses?.map((location, i) => (
-              <div
-                className='select-option'
-                value={location?.hydra_id}
-                key={i}
-              >{location?.name}</div>
-            ) || [])}
-          </Select>
-          <div className='picked-locations'>
-            {housesList?.map((location) => (
-              <span
-                className='picked-location'
-                onClick={() => onHouseDelete('houses', location?.id)}
-                key={location?.id}
-              >
-              {location.name} &#10005;
-            </span>
             ))}
           </div>
         </>}
@@ -552,7 +508,7 @@ const CreateTroubleForm = ({
           value={state?.text}
           onChange={handleChange}
           required
-          style={{height: '230px'}}
+          style={{ height: '230px' }}
         />
         <FileUpload
           handleFileChange={handleFileChange}
