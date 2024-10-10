@@ -255,9 +255,14 @@ const CreateTroubleForm = ({
     e.preventDefault();
     const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : [];
     await dispatch(postTrouble({
-      addresses: [28], ...state,
+      ...state,
+      region: [state.region],
+      city: [state.city],
+      district: [state.district],
       street,
+      addresses: [28],
     }));
+    return;
     toggleModal();
     setState({
       text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
