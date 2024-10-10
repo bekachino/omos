@@ -253,9 +253,9 @@ const CreateTroubleForm = ({
   
   const onSubmit = async e => {
     e.preventDefault();
-    const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : streets;
+    const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : [];
     await dispatch(postTrouble({
-      addresses, ...state,
+      addresses: [28], ...state,
       street,
     }));
     toggleModal();
@@ -539,7 +539,7 @@ const CreateTroubleForm = ({
             }}
             type='submit'
             loading={createTroubleLoading}
-            disabled={!addresses?.length}
+            //disabled={!addresses?.length}
           >
             Добавить
           </Button>
