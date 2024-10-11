@@ -258,7 +258,7 @@ const CreateTroubleForm = ({
       ...state,
       region: [state.region],
       city: [state.city],
-      district: [state.district],
+      district: state?.district ? [state.district] : [],
       street,
       addresses: [28],
     }));
@@ -544,7 +544,7 @@ const CreateTroubleForm = ({
             }}
             type='submit'
             loading={createTroubleLoading}
-            //disabled={!addresses?.length}
+            disabled={!addresses?.length}
           >
             Добавить
           </Button>
