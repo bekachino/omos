@@ -12,7 +12,7 @@ export const locationTypes = [
     value: 'город'
   },
   {
-    key: 'dist',
+    key: 'microdistrict',
     value: 'район'
   },
 ];
