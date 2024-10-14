@@ -260,7 +260,7 @@ const CreateTroubleForm = ({
       city: [state.city],
       district: state?.district ? [state.district] : [],
       street,
-      addresses: [28],
+      addresses,
     }));
     return;
     toggleModal();
