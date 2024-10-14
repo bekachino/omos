@@ -14,7 +14,6 @@ const Select = ({
   manualEditable,
   children
 }) => {
-  const inputRef = useRef(null);
   const [showOptions, setShowOptions] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
   const [focusedIndex, setFocusedIndex] = useState(-1);
@@ -100,12 +99,10 @@ const Select = ({
           setTimeout(() => setShowOptions(false), 200);
           setFocusedIndex(-1);
         }}
-        ref={inputRef}
         autocomplete='off'
       />
       <div
         className={`select-toggler ${showOptions ? 'select-toggler-focused' : ''}`}
-        onClick={() => console.log(inputRef?.current)}
       >
         <div className='select-arrow'><SelectArrow/></div>
       </div>

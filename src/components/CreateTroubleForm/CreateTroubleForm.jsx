@@ -33,7 +33,6 @@ const CreateTroubleForm = ({
     districts,
     districtsLoading,
     streets,
-    houses,
     streetsLoading,
     incident_types,
     incidentTypesLoading,
@@ -48,8 +47,8 @@ const CreateTroubleForm = ({
     text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
   });
   const [addresses, setAddresses] = useState([]);
+  const [pickedDistricts, setPickedDistricts] = useState([]);
   const [housesInsteadOfStreet, setHousesInsteadOfStreet] = useState([]);
-  const [housesList, setHousesList] = useState([]);
   const [troubleSide, setTroubleSide] = useState('Элкат');
   
   useEffect(() => {
@@ -108,7 +107,6 @@ const CreateTroubleForm = ({
         dispatch(getCities(value));
       } else {
         setHousesInsteadOfStreet([]);
-        setHousesList([]);
         return setState(prevState => (
           {
             ...prevState,
@@ -125,7 +123,6 @@ const CreateTroubleForm = ({
         dispatch(getDistricts(value));
       } else {
         setHousesInsteadOfStreet([]);
-        setHousesList([]);
         return setState(prevState => (
           {
             ...prevState,
@@ -141,7 +138,6 @@ const CreateTroubleForm = ({
         dispatch(getStreets(value));
       } else {
         setHousesInsteadOfStreet([]);
-        setHousesList([]);
         return setState(prevState => (
           {
             ...prevState,
@@ -163,7 +159,6 @@ const CreateTroubleForm = ({
         } else dispatch(getHouses(value));
       } else {
         setHousesInsteadOfStreet([]);
-        setHousesList([]);
         return setState(prevState => (
           {
             ...prevState,
@@ -214,11 +209,35 @@ const CreateTroubleForm = ({
     setAddresses(filteredAddresses);
   };
   
+  const onDistrictClick = (e) => {
+    const { value } = e.target;
+    if ([...pickedDistricts].filter(district => district?.hydra_id === value).length) return;
+    
+    const result = [...districts]?.filter(district => district?.hydra_id === value);
+    setPickedDistricts(prevState => (
+      [
+        ...prevState,
+        ...result
+      ]
+    ));
+    setHousesInsteadOfStreet([]);
+    
+    if (!pickedDistricts.length) {
+      dispatch(getStreets(value));
+    } else {
+      setState((prevState) => (
+        {
+          ...prevState,
+          district: null,
+        }
+      ));
+    }
+  };
+  
   const onHouseButNoStreetClick = (e) => {
     const { value } = e.target;
     if ([...housesInsteadOfStreet].filter(house => house?.hydra_id === value).length) return;
     const pickedHouse = [...streets]?.filter(house => house?.hydra_id === value);
-    setHousesList([]);
     setState(prevState => (
       {
         ...prevState,
@@ -248,9 +267,13 @@ const CreateTroubleForm = ({
     if (name === 'housesInsteadOfStreet') {
       const updatedVersion = [...housesInsteadOfStreet]?.filter(item => item?.id !== houseId);
       setHousesInsteadOfStreet(updatedVersion);
+    } else if (name === 'pickedDistrict') {
+      const updatedVersion = [...pickedDistricts]?.filter(item => item?.id !== houseId);
+      setPickedDistricts(updatedVersion);
+      setHousesInsteadOfStreet([]);
     }
   };
-  
+
   const onSubmit = async e => {
     e.preventDefault();
     const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : [];
@@ -258,17 +281,15 @@ const CreateTroubleForm = ({
       ...state,
       region: [state.region],
       city: [state.city],
-      district: state?.district ? [state.district] : [],
+      district: pickedDistricts,
       street,
       addresses,
     }));
-    return;
     toggleModal();
     setState({
       text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
     });
     setAddresses([]);
-    setHousesList([]);
     setHousesInsteadOfStreet([]);
   };
   
@@ -321,22 +342,37 @@ const CreateTroubleForm = ({
             >{location?.name}</div>
           ) || [])}
         </Select>}
-        {state?.city && <Select
-          label='Мкр/Ж-в/Село/Улица'
-          name='district'
-          value={state?.district?.name}
-          onChange={handleAddressChange}
-          loading={districtsLoading}
-        >
-          {districts?.map((location, i) => (
-            <div
-              className='select-option'
-              value={location?.hydra_id}
-              key={i}
-            >{location?.name}</div>
-          ) || [])}
-        </Select>}
-        {state?.district && <>
+        {state?.city && <>
+          <Select
+            label='Мкр/Ж-в/Село/Улица'
+            name='district'
+            value={state?.district?.name}
+            onChange={onDistrictClick}
+            loading={districtsLoading}
+          >
+            {districts?.map((location, i) => (
+              <div
+                className='select-option'
+                value={location?.hydra_id}
+                key={i}
+              >{location?.name}</div>
+            ) || [])}
+          </Select>
+          <div className='picked-locations'>
+            {pickedDistricts?.map((district) => (
+              <span
+                className='picked-location'
+                onClick={() => onHouseDelete('pickedDistrict', district?.id)}
+                key={district?.id}
+              >
+                {district.name} &#10005;
+              </span>
+            ))}
+          </div>
+        </>}
+        {(
+          state?.district || pickedDistricts.length === 1
+        ) && <>
           <Select
             label='Улица/Дом'
             name='street'

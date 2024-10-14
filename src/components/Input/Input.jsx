@@ -2,7 +2,7 @@ import React from 'react';
 import './input.css';
 
 const Input = ({
-  label, type, name, value, onChange, onFocus, onBlur, onClick, disabled, ref, autocomplete, required,
+  label, type, name, value, onChange, onFocus, onBlur, onClick, disabled, autocomplete, required,
 }) => {
   return (
     <div className='input-container'>
@@ -16,7 +16,6 @@ const Input = ({
         onFocus={onFocus}
         onBlur={onBlur}
         onClick={onClick}
-        ref={ref}
         autoComplete={autocomplete}
       />
       <label className='input-label'>{label}</label>
