@@ -109,7 +109,7 @@ export const getLocations = createAsyncThunk("data/getLocations", async (locatio
   rejectWithValue
 }) => {
   try {
-    const response = await axiosApi(`http://91.210.169.237:8001/news/api/all_location_list/?type=${location_type}`);
+    const response = await axiosApi(`https://app.skynet.kg/news/api/all_location_list/?type=${location_type}`);
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 400) {
