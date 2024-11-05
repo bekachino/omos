@@ -6,7 +6,7 @@ import {
   editComment,
   editSideAccident,
   editSolution,
-  editWorkStatus,
+  editWorkStatus, getAccidentTypes,
   getCauses,
   getCities,
   getDistricts, getHouses,
@@ -38,6 +38,7 @@ const initialState = {
   workStatuses: [],
   causes: [],
   workers: [],
+  accidentTypes: [],
   troublesLoading: false,
   troubleLoading: false,
   regionsLoading: false,
@@ -57,6 +58,7 @@ const initialState = {
   getWorkStatusesLoading: false,
   getCausesLoading: false,
   getWorkersLoading: false,
+  accidentTypesLoading: false,
   addLocationLoading: false,
   deleteTroubleLoading: false,
   successMessage: '',
@@ -66,12 +68,15 @@ const initialState = {
 };
 
 const DataSlice = createSlice({
-  name: "data", initialState, reducers: {
+  name: "data",
+  initialState,
+  reducers: {
     resetAlertMessage: state => {
       state.successMessage = false;
       state.errorMessage = false;
     },
-  }, extraReducers: (builder) => {
+  },
+  extraReducers: (builder) => {
     builder.addCase(getTroubles.pending, (state) => {
       state.troublesLoading = true;
     });
@@ -225,6 +230,17 @@ const DataSlice = createSlice({
     });
     builder.addCase(getWorkers.rejected, (state) => {
       state.getWorkersLoading = false;
+    });
+    
+    builder.addCase(getAccidentTypes.pending, (state) => {
+      state.accidentTypesLoading = true;
+    });
+    builder.addCase(getAccidentTypes.fulfilled, (state, { payload: res }) => {
+      state.accidentTypes = res || [];
+      state.accidentTypesLoading = false;
+    });
+    builder.addCase(getAccidentTypes.rejected, (state) => {
+      state.accidentTypesLoading = false;
     });
     
     builder.addCase(postTrouble.pending, (state) => {

@@ -1,4 +1,4 @@
-export const apiUrl = 'http://10.1.4.9:8000/';
+export const apiUrl = 'http://10.1.2.162:8000/';
 
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 

@@ -5,6 +5,7 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
+  getAccidentTypes,
   getCities,
   getDistricts,
   getHouses,
@@ -40,8 +41,10 @@ const CreateTroubleForm = ({
     locations,
     locationsLoading,
     workers,
+    accidentTypes,
     workersLoading,
     createTroubleLoading,
+    accidentTypesLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState({
     text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
@@ -56,6 +59,7 @@ const CreateTroubleForm = ({
     dispatch(getIncidentTypes());
     dispatch(getWorkTypes());
     dispatch(getWorkers());
+    dispatch(getAccidentTypes());
   }, [dispatch]);
   
   useEffect(() => {
@@ -273,7 +277,7 @@ const CreateTroubleForm = ({
       setHousesInsteadOfStreet([]);
     }
   };
-
+  
   const onSubmit = async e => {
     e.preventDefault();
     const street = housesInsteadOfStreet?.length ? housesInsteadOfStreet : [];
@@ -292,6 +296,8 @@ const CreateTroubleForm = ({
     setAddresses([]);
     setHousesInsteadOfStreet([]);
   };
+  
+  console.log(state);
   
   return (
     <div
@@ -453,6 +459,22 @@ const CreateTroubleForm = ({
             >{type?.value}</div>
           ))}
         </Select>
+        <Select
+          label='Тип аварии'
+          name='accident_type'
+          value={accidentTypes?.filter(type => type.key === state?.accident_type)[0]?.value}
+          onChange={handleChange}
+          loading={incidentTypesLoading}
+          required
+        >
+          {accidentTypes.map((type) => (
+            <div
+              className='select-option'
+              value={type?.key}
+              key={type?.key}
+            >{type?.value}</div>
+          ))}
+        </Select>
         {state?.incident_type === 'maintenance' && <Input
           label='Длительность'
           name='work_duration'
@@ -541,6 +563,11 @@ const CreateTroubleForm = ({
             className='select-option'
             value='Скайнет'
           >Скайнет
+          </div>
+          <div
+            className='select-option'
+            value='Анфея'
+          >Анфея
           </div>
         </Select>
         <TextArea

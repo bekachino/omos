@@ -8,7 +8,10 @@ export const getTroubles = createAsyncThunk("data/getTroubles", async (data, {
 }) => {
   try {
     const response = await axiosApi(`incident_list/?page=${data.currentTab || 1}&page_size=${data.page_size}`);
-    return { ...response.data, page_size: data.page_size };
+    return {
+      ...response.data,
+      page_size: data.page_size
+    };
   } catch (e) {
     return rejectWithValue(smthIsWrongErrorMessage);
   }
@@ -175,6 +178,20 @@ export const getWorkers = createAsyncThunk("data/getWorkers", async (location_ty
   }
 });
 
+export const getAccidentTypes = createAsyncThunk("data/getAccidentTypes", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`choices/accident_type/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {
@@ -191,9 +208,18 @@ export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
     
     formDataToBitrix.append('location_areas', JSON.stringify(location_areas));
     for (const key in data) {
-      if (['addresses', 'locations'].includes(key)) {
+      if ([
+        'addresses',
+        'locations'
+      ].includes(key)) {
         formDataToBitrix.append(key, JSON.stringify(data[key]));
-      } else if (!['region', 'city', 'district', 'street', 'houses'].includes(key)) formDataToBitrix.append(key, data[key]);
+      } else if (![
+        'region',
+        'city',
+        'district',
+        'street',
+        'houses'
+      ].includes(key)) formDataToBitrix.append(key, data[key]);
     }
     
     await axiosApi.post(`incident/create/`, formDataToBitrix);
