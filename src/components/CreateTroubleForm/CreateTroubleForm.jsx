@@ -5,7 +5,7 @@ import TextArea from "../TextArea/TextArea";
 import Select from "../Select/Select";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  getAccidentTypes,
+  getAccidentTypes, getAdditionalWorkTypes,
   getCities,
   getDistricts,
   getHouses,
@@ -17,7 +17,10 @@ import {
   getWorkTypes,
   postTrouble
 } from "../../features/dataThunk";
-import { locationTypes } from "../../constants";
+import {
+  additionalWorkTypesTranslations,
+  locationTypes
+} from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
 import './createTroubleForm.css';
 
@@ -38,6 +41,7 @@ const CreateTroubleForm = ({
     incident_types,
     incidentTypesLoading,
     work_types,
+    additionalWorkTypes,
     locations,
     locationsLoading,
     workers,
@@ -45,6 +49,7 @@ const CreateTroubleForm = ({
     workersLoading,
     createTroubleLoading,
     accidentTypesLoading,
+    additionalWorkTypesLoading,
   } = useAppSelector(state => state.dataState);
   const [state, setState] = useState({
     text: 'Добрый день, уважаемый абонент, на данный момент возможны затруднения в работе интернет-услуг в связи с проводимыми профилактическими работами на стороне вышестоящего поставщика интернет-трафика. В самое ближайшее время проблема будет устранена. Приносим извинения за доставленные неудобства и надеемся на Ваше понимание.'
@@ -60,6 +65,7 @@ const CreateTroubleForm = ({
     dispatch(getWorkTypes());
     dispatch(getWorkers());
     dispatch(getAccidentTypes());
+    dispatch(getAdditionalWorkTypes());
   }, [dispatch]);
   
   useEffect(() => {
@@ -288,6 +294,7 @@ const CreateTroubleForm = ({
       district: pickedDistricts,
       street,
       addresses,
+      work_type2: additionalWorkTypes.find(type => type.value === state?.work_type2)?.key
     }));
     toggleModal();
     setState({
@@ -296,8 +303,6 @@ const CreateTroubleForm = ({
     setAddresses([]);
     setHousesInsteadOfStreet([]);
   };
-  
-  console.log(state);
   
   return (
     <div
@@ -460,11 +465,27 @@ const CreateTroubleForm = ({
           ))}
         </Select>
         <Select
+          label='Тип работы'
+          name='work_type2'
+          value={additionalWorkTypesTranslations.find(translation => translation?.key === state?.work_type2)?.value}
+          onChange={handleChange}
+          loading={additionalWorkTypesLoading}
+          required
+        >
+          {additionalWorkTypes.map((type) => (
+            <div
+              className='select-option'
+              value={type?.value}
+              key={type?.key}
+            >{additionalWorkTypesTranslations.find(translation => translation?.key === type?.value)?.value}</div>
+          ))}
+        </Select>
+        <Select
           label='Тип аварии'
           name='accident_type'
           value={accidentTypes?.filter(type => type.key === state?.accident_type)[0]?.value}
           onChange={handleChange}
-          loading={incidentTypesLoading}
+          loading={accidentTypesLoading}
           required
         >
           {accidentTypes.map((type) => (

@@ -6,7 +6,7 @@ import {
   editComment,
   editSideAccident,
   editSolution,
-  editWorkStatus, getAccidentTypes,
+  editWorkStatus, getAccidentTypes, getAdditionalWorkTypes,
   getCauses,
   getCities,
   getDistricts, getHouses,
@@ -39,6 +39,7 @@ const initialState = {
   causes: [],
   workers: [],
   accidentTypes: [],
+  additionalWorkTypes: [],
   troublesLoading: false,
   troubleLoading: false,
   regionsLoading: false,
@@ -59,6 +60,7 @@ const initialState = {
   getCausesLoading: false,
   getWorkersLoading: false,
   accidentTypesLoading: false,
+  additionalWorkTypesLoading: false,
   addLocationLoading: false,
   deleteTroubleLoading: false,
   successMessage: '',
@@ -241,6 +243,17 @@ const DataSlice = createSlice({
     });
     builder.addCase(getAccidentTypes.rejected, (state) => {
       state.accidentTypesLoading = false;
+    });
+    
+    builder.addCase(getAdditionalWorkTypes.pending, (state) => {
+      state.additionalWorkTypesLoading = true;
+    });
+    builder.addCase(getAdditionalWorkTypes.fulfilled, (state, { payload: res }) => {
+      state.additionalWorkTypesLoading = false;
+      state.additionalWorkTypes = res || [];
+    });
+    builder.addCase(getAdditionalWorkTypes.rejected, (state) => {
+      state.additionalWorkTypesLoading = false;
     });
     
     builder.addCase(postTrouble.pending, (state) => {

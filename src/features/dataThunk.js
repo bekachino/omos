@@ -192,6 +192,20 @@ export const getAccidentTypes = createAsyncThunk("data/getAccidentTypes", async 
   }
 });
 
+export const getAdditionalWorkTypes = createAsyncThunk("data/getAdditionalWorkTypes", async (location_type, {
+  rejectWithValue
+}) => {
+  try {
+    const response = await axiosApi(`choices/work-types_second/`);
+    return response.data;
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 400) {
+      return rejectWithValue(smthIsWrongErrorMessage);
+    }
+    throw e;
+  }
+});
+
 export const postTrouble = createAsyncThunk("data/postTrouble", async (data, {
   rejectWithValue
 }) => {

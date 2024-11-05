@@ -1,4 +1,4 @@
-export const apiUrl = 'http://10.1.2.162:8000/';
+export const apiUrl = 'http://10.1.4.9:8000/';
 
 export const smthIsWrongErrorMessage = 'Что то пошло не так, повторите позже';
 
@@ -14,6 +14,21 @@ export const locationTypes = [
   {
     key: 'microdistrict',
     value: 'район'
+  },
+];
+
+export const additionalWorkTypesTranslations = [
+  {
+    key: 'municipal_work',
+    value: 'Муниципальные работы',
+  },
+  {
+    key: 'maintenance',
+    value: 'Тех. работы'
+  },
+  {
+    key: 'accident',
+    value: 'Авария'
   },
 ];
 
