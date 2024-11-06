@@ -18,7 +18,6 @@ import {
   postTrouble
 } from "../../features/dataThunk";
 import {
-  additionalWorkTypesTranslations,
   locationTypes
 } from "../../constants";
 import FileUpload from "../FileUpload/FileUpload";
@@ -467,7 +466,7 @@ const CreateTroubleForm = ({
         <Select
           label='Тип работы'
           name='work_type2'
-          value={additionalWorkTypesTranslations.find(translation => translation?.key === state?.work_type2)?.value}
+          value={additionalWorkTypes.find(type => type?.value === state?.work_type2)?.value}
           onChange={handleChange}
           loading={additionalWorkTypesLoading}
           required
@@ -477,7 +476,7 @@ const CreateTroubleForm = ({
               className='select-option'
               value={type?.value}
               key={type?.key}
-            >{additionalWorkTypesTranslations.find(translation => translation?.key === type?.value)?.value}</div>
+            >{type?.value}</div>
           ))}
         </Select>
         <Select
